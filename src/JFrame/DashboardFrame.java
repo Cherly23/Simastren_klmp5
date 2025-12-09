@@ -4,17 +4,111 @@
  */
 package JFrame;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
+
+
 /**
  *
  * @author cherly
  */
 public class DashboardFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DashboardFrame
-     */
     public DashboardFrame() {
         initComponents();
+        this.setExtendedState(MAXIMIZED_BOTH);
+        execute();
+    }
+    
+    private void execute() {
+        ImageIcon iconHome          = new ImageIcon(getClass().getResource("/Image/iconHome.png"));
+        ImageIcon iconDashboard     = new ImageIcon(getClass().getResource("/Image/iconDashboard.png"));
+        ImageIcon iconAkademik      = new ImageIcon(getClass().getResource("/Image/iconAkademik.png"));
+        ImageIcon iconSantri        = new ImageIcon(getClass().getResource("/Image/iconSantri.png"));
+        ImageIcon iconKelas         = new ImageIcon(getClass().getResource("/Image/iconKitab.png"));
+        ImageIcon iconKitab         = new ImageIcon(getClass().getResource("/Image/iconKitab.png"));
+        ImageIcon iconKepengurusan  = new ImageIcon(getClass().getResource("/Image/iconKepengurusan.png"));
+        ImageIcon iconPengurus      = new ImageIcon(getClass().getResource("/Image/iconPengurus.png"));
+        ImageIcon iconPengajar      = new ImageIcon(getClass().getResource("/Image/iconPengajar.png"));
+        
+        MenuItem dashboard = new MenuItem(null, true, iconDashboard, "DASHBOARD", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new Dashboard2());
+            }
+        });
+        
+        MenuItem santri = new MenuItem(null, true, iconSantri, "DATA SANTRI", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new Dashboard2());
+            }
+        });
+         
+        MenuItem kelas = new MenuItem(null, true, iconKelas, "DATA KELAS", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new Dashboard2());
+            }
+        });
+          
+        MenuItem kitab = new MenuItem(null, true, iconKitab, "DATA KITAB", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new Dashboard2());
+            }
+        });
+           
+        MenuItem pengurus = new MenuItem(null, true, iconPengurus, "DATA PENGURUS", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new Dashboard2());
+            }
+        });
+            
+        MenuItem pengajar = new MenuItem(null, true, iconPengajar, "DATA PENGAJAR", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new Dashboard2());
+            }
+        });
+             
+        MenuItem menuHome          = new MenuItem(iconHome, false, null, "HOME", null, dashboard);
+        MenuItem menuAkademik      = new MenuItem(iconAkademik, false, null, "AKADEMIK SANTRI", null, santri, kelas, kitab);
+        MenuItem menuKepengurusan  = new MenuItem(iconKepengurusan, false, null, "KEPENGURUSAN", null, pengurus, pengajar);
+        
+        addMenu(menuHome, menuAkademik, menuKepengurusan);
+    }
+    
+    private  void  addMenu(MenuItem... menu) {
+        for (int i = 0; i < menu.length; i++) {
+            pn_menu.add(menu[i]);
+            ArrayList<MenuItem> subMenu = menu[i].getSubMenu();
+            for (MenuItem m : subMenu) {
+                addMenu(m);
+            }
+        }
+        pn_menu.revalidate();
     }
 
     /**
@@ -26,21 +120,124 @@ public class DashboardFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        pn_atas = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        pn_subMenu = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        pn_menu = new javax.swing.JPanel();
+        pn_content = new javax.swing.JPanel();
+        pn_utama = new javax.swing.JPanel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        pn_atas.setBackground(new java.awt.Color(35, 64, 60));
+        pn_atas.setPreferredSize(new java.awt.Dimension(150, 50));
+
+        jLabel2.setFont(new java.awt.Font("Book Antiqua", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 205, 0));
+        jLabel2.setText("SIMASTREN");
+
+        jLabel3.setFont(new java.awt.Font("Book Antiqua", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 205, 0));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Logo Pondok 3.png"))); // NOI18N
+
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/icons8-close-20 (3).png"))); // NOI18N
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pn_atasLayout = new javax.swing.GroupLayout(pn_atas);
+        pn_atas.setLayout(pn_atasLayout);
+        pn_atasLayout.setHorizontalGroup(
+            pn_atasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_atasLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 373, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        pn_atasLayout.setVerticalGroup(
+            pn_atasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addGroup(pn_atasLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        getContentPane().add(pn_atas, java.awt.BorderLayout.PAGE_START);
+
+        pn_subMenu.setBackground(new java.awt.Color(255, 255, 255));
+        pn_subMenu.setPreferredSize(new java.awt.Dimension(228, 392));
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        pn_menu.setBackground(new java.awt.Color(11, 43, 38));
+        pn_menu.setLayout(new javax.swing.BoxLayout(pn_menu, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane1.setViewportView(pn_menu);
+
+        javax.swing.GroupLayout pn_subMenuLayout = new javax.swing.GroupLayout(pn_subMenu);
+        pn_subMenu.setLayout(pn_subMenuLayout);
+        pn_subMenuLayout.setHorizontalGroup(
+            pn_subMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+        );
+        pn_subMenuLayout.setVerticalGroup(
+            pn_subMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(pn_subMenu, java.awt.BorderLayout.LINE_START);
+
+        pn_content.setBackground(new java.awt.Color(255, 255, 255));
+
+        pn_utama.setBackground(new java.awt.Color(255, 255, 255));
+        pn_utama.setLayout(new java.awt.BorderLayout());
+
+        javax.swing.GroupLayout pn_contentLayout = new javax.swing.GroupLayout(pn_content);
+        pn_content.setLayout(pn_contentLayout);
+        pn_contentLayout.setHorizontalGroup(
+            pn_contentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pn_utama, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+        );
+        pn_contentLayout.setVerticalGroup(
+            pn_contentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pn_utama, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(pn_content, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        pn_utama.add(new TampilanAwal());
+        pn_utama.repaint();
+        pn_utama.revalidate();
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -68,6 +265,9 @@ public class DashboardFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(DashboardFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -78,5 +278,14 @@ public class DashboardFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pn_atas;
+    private javax.swing.JPanel pn_content;
+    private javax.swing.JPanel pn_menu;
+    private javax.swing.JPanel pn_subMenu;
+    private javax.swing.JPanel pn_utama;
     // End of variables declaration//GEN-END:variables
 }

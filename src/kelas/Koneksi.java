@@ -4,10 +4,26 @@
  */
 package kelas;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
  *
  * @author cherly
  */
 public class Koneksi {
-    
+    private Connection mysqlconfig;
+    public Connection configDB() {
+        try {
+            String url = "jdbc:mysql://localhost:3306/manajemen_pesantren2";
+            String user = "root";
+            String pass = "";
+            mysqlconfig = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return mysqlconfig;
+    }
 }
+
