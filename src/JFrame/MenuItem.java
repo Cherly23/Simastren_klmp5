@@ -13,16 +13,16 @@ import javax.swing.Icon;
  *
  * @author cherly
  */
-public class MenuItem1 extends javax.swing.JPanel {
+public class MenuItem extends javax.swing.JPanel {
 
-    public ArrayList<MenuItem1> getSubMenu() {
+    public ArrayList<MenuItem> getSubMenu() {
         return subMenu;
     }
     
-    private final ArrayList<MenuItem1> subMenu = new ArrayList<>();
+    private final ArrayList<MenuItem> subMenu = new ArrayList<>();
     private  ActionListener act;
     
-    public MenuItem1(Icon icon, boolean sbm, Icon iconSub, String menuName, ActionListener act, MenuItem1... subMenu) {
+    public MenuItem(Icon icon, boolean sbm, Icon iconSub, String menuName, ActionListener act, MenuItem... subMenu) {
         initComponents();
         
         lb_icon.setIcon(icon);
@@ -111,7 +111,7 @@ public class MenuItem1 extends javax.swing.JPanel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = subMenu.size() - 1; i >= 10; i++) {
+                for (int i = subMenu.size() - 1; i >= 0; i--) {
                     sleep();
                     subMenu.get(i).setVisible(false);
                     subMenu.get(i).hideMenu();

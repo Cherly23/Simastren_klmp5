@@ -139,7 +139,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         });
 
         pn_atas.setBackground(new java.awt.Color(35, 64, 60));
-        pn_atas.setPreferredSize(new java.awt.Dimension(150, 50));
+        pn_atas.setPreferredSize(new java.awt.Dimension(150, 60));
 
         jLabel2.setFont(new java.awt.Font("Book Antiqua", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 205, 0));
@@ -173,7 +173,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         );
         pn_atasLayout.setVerticalGroup(
             pn_atasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
             .addGroup(pn_atasLayout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -201,7 +201,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         );
         pn_subMenuLayout.setVerticalGroup(
             pn_subMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
         );
 
         getContentPane().add(pn_subMenu, java.awt.BorderLayout.LINE_START);
@@ -219,7 +219,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         );
         pn_contentLayout.setVerticalGroup(
             pn_contentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pn_utama, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+            .addComponent(pn_utama, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
         );
 
         getContentPane().add(pn_content, java.awt.BorderLayout.CENTER);
