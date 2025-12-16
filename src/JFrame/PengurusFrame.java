@@ -4,9 +4,20 @@
  */
 package JFrame;
 
+import javax.swing.ImageIcon;
+import java.awt.Image;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  *
- * @author cherly
+ * @author giantluigi
  */
 public class PengurusFrame extends javax.swing.JPanel {
 
@@ -15,7 +26,23 @@ public class PengurusFrame extends javax.swing.JPanel {
      */
     public PengurusFrame() {
         initComponents();
+        load_table();
+        reset () ;
+}
+     void reset(){
+        jNamaLengkap.setText(null);
+        jAlamat.setText(null);
+        jNohp.setText(null);
     }
+     void load_table() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Nama Lengkap");
+        model.addColumn("Alamat");
+        model.addColumn("No.Handphone");
+     }
+
+}
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,19 +53,177 @@ public class PengurusFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jNohp = new javax.swing.JTextField();
+        jNamaLengkap = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButtonTambah = new javax.swing.JButton();
+        BtnHapus = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        BtnSimpan = new javax.swing.JButton();
+        jAlamat = new javax.swing.JTextField();
+        BACKGROUND = new javax.swing.JLabel();
+
+        setPreferredSize(new java.awt.Dimension(1064, 715));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jNohp.setText("jTextField1");
+        jNohp.setOpaque(true);
+        add(jNohp, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 342, 270, 30));
+
+        jNamaLengkap.setText("jTextField1");
+        jNamaLengkap.setOpaque(true);
+        add(jNamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 260, 20));
+
+        jTextField4.setText("jTextField4");
+        jTextField4.setOpaque(true);
+        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 70, 280, -1));
+
+        jTable1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "NAMA", "ALAMAT", "GENDER"
+            }
+        ));
+        jTable1.setShowGrid(false);
+        jScrollPane1.setViewportView(jTable1);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 120, 560, 440));
+
+        jLabel1.setFont(new java.awt.Font("Poppins", 1, 36)); // NOI18N
+        jLabel1.setText("DATA PENGURUS");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 320, 60));
+
+        jLabel3.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
+        jLabel3.setText("NAMA LENGKAP");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
+        jLabel4.setText("ALAMAT");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
+        jLabel2.setText("NO HANDPHONE");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, -1, -1));
+
+        jButtonTambah.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        jButtonTambah.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonTambah.setText("TAMBAH");
+        jButtonTambah.setContentAreaFilled(false);
+        jButtonTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTambahActionPerformed(evt);
+            }
+        });
+        add(jButtonTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 500, -1, 30));
+
+        BtnHapus.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        BtnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        BtnHapus.setText("HAPUS");
+        BtnHapus.setContentAreaFilled(false);
+        BtnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnHapusActionPerformed(evt);
+            }
+        });
+        add(BtnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 500, 80, 30));
+
+        jButton3.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("RESET");
+        jButton3.setContentAreaFilled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 500, -1, -1));
+
+        BtnSimpan.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        BtnSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        BtnSimpan.setText("SIMPAN");
+        BtnSimpan.setContentAreaFilled(false);
+        BtnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSimpanActionPerformed(evt);
+            }
+        });
+        add(BtnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 500, -1, -1));
+
+        jAlamat.setText("jTextField1");
+        add(jAlamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 270, -1));
+
+        BACKGROUND.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        BACKGROUND.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGE/dataPengurus.png"))); // NOI18N
+        BACKGROUND.setText("RESET");
+        BACKGROUND.setName(""); // NOI18N
+        add(BACKGROUND, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTambahActionPerformed
+        DataPengurus prd = new DataPengurus();
+        prd.setProductName(txtName.getText());
+        prd.setProductDescription(txtDesc.getText());
+        prd.setProductPrice(Integer.parseInt(txtPrice.getText()));
+        
+        if (cbxCategory.getSelectedItem()=="Active") {
+            prd.setProductCategory(1);
+        } else {
+            prd.setProductCategory(0);
+        }
+        prd.TambahProduct();
+        load_table();
+        reset();
+    }//GEN-LAST:event_jButtonTambahActionPerformed
+
+    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
+        PengurusFrame pgr = new DataPengurus();
+        pgr.setNoHandhone(Integer.parseInt(jNohp.getText()));
+        pgr.HapusDataPengurus();
+
+        load_table();
+        reset();
+    }//GEN-LAST:event_BtnHapusActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
+        String nama = jNamaLengkap.getText();
+        String alaat = jComboBoxAlamat.getSelectedItem().toString();
+        String noHp = jNohp.getText();
+    }//GEN-LAST:event_BtnSimpanActionPerformed
+    private void initComponent() {
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel BACKGROUND;
+    private javax.swing.JButton BtnHapus;
+    private javax.swing.JButton BtnSimpan;
+    private javax.swing.JTextField jAlamat;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonTambah;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JTextField jNamaLengkap;
+    private javax.swing.JTextField jNohp;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
