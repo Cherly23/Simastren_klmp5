@@ -69,7 +69,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 pn_utama.removeAll();
                 pn_utama.repaint();
                 pn_utama.revalidate();
-                pn_utama.add(new Dashboard2());
+                pn_utama.add(new KitabFrame());
             }
         });
            

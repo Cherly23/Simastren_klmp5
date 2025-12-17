@@ -200,7 +200,7 @@ public class KitabFrame extends javax.swing.JFrame{
         jPanel2 = new javax.swing.JPanel();
         txtNamaKitab = new javax.swing.JTextField();
         btnUbah = new javax.swing.JButton();
-        jTextField4 = new javax.swing.JTextField();
+        tSearch = new javax.swing.JTextField();
         txtIdKitab = new javax.swing.JTextField();
         btnHapus = new javax.swing.JButton();
         btnTambah = new javax.swing.JButton();
@@ -216,7 +216,7 @@ public class KitabFrame extends javax.swing.JFrame{
         btnReset1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setLayout(new java.awt.CardLayout());
+        getContentPane().setLayout(new java.awt.CardLayout());
 
         mainpanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -242,8 +242,8 @@ public class KitabFrame extends javax.swing.JFrame{
         });
         jPanel2.add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 470, 70, 40));
 
-        jTextField4.setBorder(null);
-        jPanel2.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, 300, 30));
+        tSearch.setBorder(null);
+        jPanel2.add(tSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, 300, 30));
 
         txtIdKitab.setBorder(null);
         txtIdKitab.setFocusable(false);
@@ -337,16 +337,35 @@ public class KitabFrame extends javax.swing.JFrame{
 
         mainpanel.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        add(mainpanel, "card2");
+        getContentPane().add(mainpanel, "card2");
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
         // TODO add your handling code here:
+        DataKitab  dataKitabUbah = new DataKitab();
+        
+        dataKitabUbah.setId_kitab(Integer.parseInt(txtIdKitab.getText()));
+        dataKitabUbah.setNama_kitab(txtNamaKitab.getText());
+        
+        dataKitabUbah.updateData();
+        
+        resetForm();
+        
+        load_table();
 
     }//GEN-LAST:event_btnUbahActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
+         DataKitab dataKitabHapus = new DataKitab();
+        
+        dataKitabHapus.setId_kitab(Integer.parseInt(txtIdKitab.getText()));
+        
+        dataKitabHapus.deleteData();
+        
+        resetForm();
+        
+        load_table();
 
     }//GEN-LAST:event_btnHapusActionPerformed
 
@@ -365,12 +384,7 @@ public class KitabFrame extends javax.swing.JFrame{
         String namaKitab = txtNamaKitab.getText();
         String namaKelas = cmbKelas.getSelectedItem().toString();
         String namaUstadz = cmbPengajar.getSelectedItem().toString();
-        String kategoriKitab = jTextField4.getText(); // Asumsi jTextField4 adalah input Kategori Kitab
 
-        if (namaKitab.isEmpty() || kategoriKitab.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nama Kitab dan Kategori harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
 
         DataKitab dataKitab = new DataKitab();
         int idUstadz = -1;
@@ -392,7 +406,6 @@ public class KitabFrame extends javax.swing.JFrame{
                 dataKitab.setNama_kitab(namaKitab);
                 dataKitab.setUstadz_id(idUstadz);
                 dataKitab.setKelas_id(idKelas);
-                dataKitab.setKategori_kitab(kategoriKitab);
                 
                 dataKitab.saveData();
                 
@@ -413,6 +426,7 @@ public class KitabFrame extends javax.swing.JFrame{
 
     private void btnReset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReset1ActionPerformed
         // TODO add your handling code here:
+        resetForm();
     }//GEN-LAST:event_btnReset1ActionPerformed
 
 
@@ -431,8 +445,8 @@ public class KitabFrame extends javax.swing.JFrame{
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JPanel mainpanel;
+    private javax.swing.JTextField tSearch;
     private javax.swing.JTable tblKitab;
     private javax.swing.JTextField txtIdKitab;
     private javax.swing.JTextField txtNamaKitab;
