@@ -8,10 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author cherly
- */
 public class Koneksi {
     private Connection mysqlconfig;
     public Connection configDB() {

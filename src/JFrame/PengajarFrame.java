@@ -3,7 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package JFrame;
-
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import kelas.DataPengajar;
+import java.sql.SQLException;
+import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
 /**
  *
  * @author cherly
@@ -13,8 +19,111 @@ public class PengajarFrame extends javax.swing.JPanel {
     /**
      * Creates new form PengajarFrame
      */
+
     public PengajarFrame() {
         initComponents();
+        
+        buttonGroup1 = new ButtonGroup();
+        buttonGroup1.add(radioButtonLK1);
+        buttonGroup1.add(radioButtonPR);
+        
+        load_table();
+        tblUstadz.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUstadzMouseClicked(evt);
+            }
+        });
+        
+        autoIdUstadz();
+                
+    }
+    
+    void reset() {
+        tidPengajar.setText("");
+        tidPengajar.setText("");
+        tnamaLengkap.setText("");
+        tnoHP.setText("");
+        
+        buttonGroup1.clearSelection();
+        
+        autoIdUstadz();
+        load_table();
+    }
+    
+    void autoIdUstadz(){
+        ResultSet rs = null;
+        try{
+            DataPengajar pgrID = new DataPengajar();
+            rs = pgrID.autoId();
+            
+            if (rs != null && rs.next()){
+                int idMaksimum = rs.getInt("ID_TERAKHIR");
+                
+                if(idMaksimum == 0){
+                    tidPengajar.setText("1");
+                }else{
+                    int idBaru = idMaksimum + 1;
+                    tidPengajar.setText(String.valueOf(idBaru));
+                }
+            }else {
+                tidPengajar.setText("1");
+            }
+            tidPengajar.setEditable(false);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog((null), "Gagal menjalankan fitur Auto ID: "
+             + e.getMessage());
+        }finally{
+            try {
+                if (rs != null){
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Eror saat menutup ResultSet: "
+                 + e.getMessage());
+            }
+        }
+    }
+    public void load_data_pengajar(String key){
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("Nama Lengkap");
+        model.addColumn("Alamat");
+        model.addColumn("No. HP");
+        model.addColumn("Jenis Kelamin");
+        
+        ResultSet result = null;
+        DataPengajar pgr = new DataPengajar();
+        try {
+            result = pgr.tampilUstadz();
+            
+            while (result.next()){
+                model.addRow(new Object[]{
+                    result.getInt("id_ustadz"),
+                    result.getString("nama_ustadz"),
+                    result.getString("alamat"),
+                    result.getString("no_hp"),
+                    result.getString("jenis_kelamin")
+                });
+            }
+            
+            tblUstadz.setModel(model);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal memuat data tabel. Eror : " 
+                    + e.getMessage());
+        } finally {
+            try {
+                if (result != null){
+                    result.close();
+                }
+            } catch (Exception e) {
+                System.out.println("Error saat menutup ResultSet: "
+                        + e.getMessage());
+            }
+            
+        }
+    }
+    public void load_table(){
+        load_data_pengajar(null);
     }
 
     /**
@@ -26,19 +135,379 @@ public class PengajarFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        tCari = new javax.swing.JTextField();
+        tidPengajar = new javax.swing.JTextField();
+        tnoHP = new javax.swing.JTextField();
+        talamat = new javax.swing.JTextField();
+        tnamaLengkap = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblUstadz = new javax.swing.JTable();
+        buttonHapus = new javax.swing.JButton();
+        buttonUbah = new javax.swing.JButton();
+        buttonReset = new javax.swing.JButton();
+        buttonTambah = new javax.swing.JButton();
+        radioButtonPR = new javax.swing.JRadioButton();
+        radioButtonLK1 = new javax.swing.JRadioButton();
+        Background = new javax.swing.JLabel();
+
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tCari.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tCari.setActionCommand("<Not Set>");
+        tCari.setBorder(null);
+        tCari.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        tCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tCariActionPerformed(evt);
+            }
+        });
+        tCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tCariKeyReleased(evt);
+            }
+        });
+        add(tCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 60, 300, -1));
+
+        tidPengajar.setBorder(null);
+        tidPengajar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tidPengajarActionPerformed(evt);
+            }
+        });
+        add(tidPengajar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 195, 270, 25));
+
+        tnoHP.setBorder(null);
+        tnoHP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tnoHPActionPerformed(evt);
+            }
+        });
+        add(tnoHP, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 440, 270, 20));
+
+        talamat.setBorder(null);
+        add(talamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 352, 270, 28));
+
+        tnamaLengkap.setBorder(null);
+        tnamaLengkap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tnamaLengkapActionPerformed(evt);
+            }
+        });
+        add(tnamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 275, 270, 25));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Jenis Kelamin");
+        jLabel2.setPreferredSize(new java.awt.Dimension(40, 20));
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 480, 270, -1));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel4.setText("Data Pengajar");
+        jLabel4.setPreferredSize(new java.awt.Dimension(40, 20));
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 420, 60));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("ID Pengajar");
+        jLabel5.setPreferredSize(new java.awt.Dimension(40, 20));
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 270, -1));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText("Alamat");
+        jLabel6.setPreferredSize(new java.awt.Dimension(40, 20));
+        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 320, 270, -1));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("No. HP");
+        jLabel7.setPreferredSize(new java.awt.Dimension(40, 20));
+        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 400, 270, -1));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("Nama Lengkap");
+        jLabel8.setPreferredSize(new java.awt.Dimension(40, 20));
+        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 270, -1));
+
+        tblUstadz.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
+            }
+        ));
+        tblUstadz.setGridColor(new java.awt.Color(255, 255, 255));
+        tblUstadz.setShowGrid(false);
+        tblUstadz.setShowHorizontalLines(true);
+        tblUstadz.setShowVerticalLines(true);
+        tblUstadz.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                tblUstadzAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        tblUstadz.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUstadzMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblUstadz);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(484, 131, 530, -1));
+
+        buttonHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonHapus.setForeground(new java.awt.Color(255, 255, 255));
+        buttonHapus.setText("Hapus");
+        buttonHapus.setBorder(null);
+        buttonHapus.setBorderPainted(false);
+        buttonHapus.setContentAreaFilled(false);
+        buttonHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonHapusActionPerformed(evt);
+            }
+        });
+        add(buttonHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 582, 78, 33));
+
+        buttonUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonUbah.setForeground(new java.awt.Color(255, 255, 255));
+        buttonUbah.setText("Ubah");
+        buttonUbah.setBorder(null);
+        buttonUbah.setBorderPainted(false);
+        buttonUbah.setContentAreaFilled(false);
+        buttonUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUbahActionPerformed(evt);
+            }
+        });
+        add(buttonUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 583, 76, 30));
+
+        buttonReset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonReset.setForeground(new java.awt.Color(255, 255, 255));
+        buttonReset.setText("Reset");
+        buttonReset.setBorder(null);
+        buttonReset.setBorderPainted(false);
+        buttonReset.setContentAreaFilled(false);
+        buttonReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonResetActionPerformed(evt);
+            }
+        });
+        add(buttonReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(219, 583, 70, 30));
+
+        buttonTambah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonTambah.setForeground(new java.awt.Color(255, 255, 255));
+        buttonTambah.setText("Tambah");
+        buttonTambah.setToolTipText("");
+        buttonTambah.setBorder(null);
+        buttonTambah.setBorderPainted(false);
+        buttonTambah.setContentAreaFilled(false);
+        buttonTambah.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        buttonTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTambahActionPerformed(evt);
+            }
+        });
+        add(buttonTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(307, 583, 78, 30));
+
+        buttonGroup1.add(radioButtonPR);
+        radioButtonPR.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        radioButtonPR.setText("Perempuan");
+        radioButtonPR.setContentAreaFilled(false);
+        radioButtonPR.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        radioButtonPR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioButtonPRActionPerformed(evt);
+            }
+        });
+        add(radioButtonPR, new org.netbeans.lib.awtextra.AbsoluteConstraints(174, 506, -1, -1));
+
+        buttonGroup1.add(radioButtonLK1);
+        radioButtonLK1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        radioButtonLK1.setText("Laki-Laki");
+        radioButtonLK1.setContentAreaFilled(false);
+        radioButtonLK1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        radioButtonLK1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioButtonLK1ActionPerformed(evt);
+            }
+        });
+        add(radioButtonLK1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 506, -1, -1));
+
+        Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JFrame/Data_Pengajar_Mentahan_1.png"))); // NOI18N
+        add(Background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 710));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCariActionPerformed
+        // TODO add your handling code here:
+        load_data_pengajar(tCari.getText());
+    }//GEN-LAST:event_tCariActionPerformed
+
+    private void tnamaLengkapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnamaLengkapActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tnamaLengkapActionPerformed
+
+    private void tblUstadzAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tblUstadzAncestorAdded
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_tblUstadzAncestorAdded
+
+    private void tblUstadzMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUstadzMouseClicked
+        // TODO add your handling code here:
+        int baris = tblUstadz.getSelectedRow();
+        if (baris != -1){
+            DefaultTableModel model = (DefaultTableModel) tblUstadz.getModel();
+            String id = model.getValueAt(baris, 0).toString();
+            String nama = model.getValueAt(baris, 1).toString();
+            String alamat = model.getValueAt(baris, 2).toString();
+            String noHp = model.getValueAt(baris, 3).toString();
+            String jenisKelamin = model.getValueAt(baris, 4).toString();
+
+            tidPengajar.setEditable(true);
+            tidPengajar.setText(id);
+            tnamaLengkap.setText(nama);
+            talamat.setText(alamat);
+            tnoHP.setText(noHp);
+
+            buttonGroup1.clearSelection();
+            if (jenisKelamin.equalsIgnoreCase("Laki-laki")){
+                radioButtonLK1.setSelected(true);
+            }else if (jenisKelamin.equalsIgnoreCase("Perempuan")) {
+                radioButtonPR.setSelected(true);
+            }
+        }
+    }//GEN-LAST:event_tblUstadzMouseClicked
+
+    private void buttonHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHapusActionPerformed
+        // TODO add your handling code here:
+        if(tidPengajar.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Pilih data di tabel yang ingin dihapus");
+            return;
+        }
+        int konfirmasi = JOptionPane.showConfirmDialog(null, "Yakin ingin mengahapus data"
+            + "ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+        if (konfirmasi == JOptionPane.YES_OPTION){
+            DataPengajar pengajar = new DataPengajar();
+            try {
+                pengajar.setId_ustadz((Integer.parseInt(tidPengajar.getText())));
+                pengajar.hapusDataUstadz();
+                load_table();
+                reset();
+            }catch (NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "ID pengajar tidak valid.");
+            }
+        }
+    }//GEN-LAST:event_buttonHapusActionPerformed
+
+    private void buttonUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUbahActionPerformed
+        // TODO add your handling code here:
+        if (tidPengajar.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Pilih data di tabel yang ingin "
+                + "diubah terlebih dahulu.");
+            return;
+        }
+        DataPengajar pengajar = new DataPengajar();
+        try {
+            pengajar.setId_ustadz(Integer.parseInt(tidPengajar.getText()));
+
+        }catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "ID pengajar tidak valid.");
+            return;
+        }
+        pengajar.setNama_ustadz(tnamaLengkap.getText());
+        pengajar.setAlamat(talamat.getText());
+        pengajar.setNo_hp(tnoHP.getText());
+
+        String jenisKelamin = "";
+        if (radioButtonLK1.isSelected()) {
+            jenisKelamin = "Laki-laki";
+        }else if (radioButtonPR.isSelected()) {
+            jenisKelamin = "Perempuan";
+        }
+        pengajar.setJenis_kelamin(jenisKelamin);
+
+        pengajar.ubahDataUstadz();
+        load_table();
+        reset();
+    }//GEN-LAST:event_buttonUbahActionPerformed
+
+    private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
+        // TODO add your handling code here:
+        reset();
+    }//GEN-LAST:event_buttonResetActionPerformed
+
+    private void buttonTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTambahActionPerformed
+        DataPengajar pengajar = new DataPengajar();
+        pengajar.setNama_ustadz(tnamaLengkap.getText());
+        pengajar.setAlamat(talamat.getText());
+        pengajar.setNo_hp(tnoHP.getText());
+
+        String jenisKelamin = "";
+        if (radioButtonLK1.isSelected()){
+            jenisKelamin = "Laki-laki";
+        } else if (radioButtonPR.isSelected()){
+            jenisKelamin = "Perempuan";
+        }
+        pengajar.setJenis_kelamin(jenisKelamin);
+
+        pengajar.tambahDataUstadz();
+        load_table();
+        reset();
+    }//GEN-LAST:event_buttonTambahActionPerformed
+
+    private void radioButtonPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioButtonPRActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioButtonPRActionPerformed
+
+    private void radioButtonLK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioButtonLK1ActionPerformed
+        
+    }//GEN-LAST:event_radioButtonLK1ActionPerformed
+
+    private void tidPengajarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tidPengajarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tidPengajarActionPerformed
+
+    private void tCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyReleased
+        // TODO add your handling code here:
+        load_data_pengajar(tCari.getText());
+    }//GEN-LAST:event_tCariKeyReleased
+
+    private void tnoHPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnoHPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tnoHPActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Background;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton buttonHapus;
+    private javax.swing.JButton buttonReset;
+    private javax.swing.JButton buttonTambah;
+    private javax.swing.JButton buttonUbah;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton radioButtonLK1;
+    private javax.swing.JRadioButton radioButtonPR;
+    private javax.swing.JTextField tCari;
+    private javax.swing.JTextField talamat;
+    private javax.swing.JTable tblUstadz;
+    private javax.swing.JTextField tidPengajar;
+    private javax.swing.JTextField tnamaLengkap;
+    private javax.swing.JTextField tnoHP;
     // End of variables declaration//GEN-END:variables
 }
