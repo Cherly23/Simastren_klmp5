@@ -4,19 +4,98 @@
  */
 package JFrame;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import kelas.DataKelas;
+import kelas.Koneksi;
+
 /**
  *
  * @author cherly
  */
 public class KelasFrame extends javax.swing.JPanel {
 
-    /**
-     * Creates new form KelasFrame
-     */
+    private DefaultTableModel model;
+    private DataKelas kls = new DataKelas();
+
     public KelasFrame() {
         initComponents();
+        loadTable();      // Munculkan data saat pertama kali buka
+        loadWaliKelas();  // Isi ComboBox dengan nama Ustadz
+        resetForm();      // Bersihkan field
     }
 
+    // --- LOGIKA SISTEM ---
+
+    private void loadTable() {
+        model = new DefaultTableModel();
+        model.addColumn("ID Kelas");
+        model.addColumn("Nama Kelas");
+        model.addColumn("Tingkat");
+        model.addColumn("Wali Ustadz");
+
+        try {
+            ResultSet rs = kls.tampilKelas();
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("id_kelas"),
+                    rs.getString("nama_kelas"),
+                    rs.getString("tingkat_pendidikan"),
+                    rs.getString("nama_ustadz")
+                });
+            }
+            jTable1.setModel(model);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage());
+        }
+    }
+
+    private void loadWaliKelas() {
+    try {
+        // Membersihkan item lama agar tidak duplikat saat dipanggil ulang
+        CBWaliKelas.removeAllItems();
+        CBWaliKelas.addItem("- Pilih Wali Kelas -"); // Item default (index 0)
+
+        Koneksi kon = new Koneksi();
+        java.sql.Connection conn = kon.configDB();
+        java.sql.Statement st = conn.createStatement();
+        
+        // Ambil data dari tabel ustadz
+        ResultSet rs = st.executeQuery("SELECT nama_ustadz FROM ustadz ORDER BY nama_ustadz ASC");
+        
+        while (rs.next()) {
+            CBWaliKelas.addItem(rs.getString("nama_ustadz"));
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Gagal memuat daftar ustadz: " + e.getMessage());
+    }
+}
+
+    private void resetForm() {
+        tNamaKelas.setText("");
+        tTingkatPendidikan.setText("");
+        CBWaliKelas.setSelectedIndex(0);
+        tCari.setText("");
+    }
+    
+    private int getSelectedUstadzId(String nama) {
+        int id = 0;
+        try {
+            Koneksi kon = new Koneksi();
+            java.sql.Connection conn = kon.configDB();
+            java.sql.PreparedStatement ps = conn.prepareStatement("SELECT id_ustadz FROM ustadz WHERE nama_ustadz = ?");
+            ps.setString(1, nama);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("id_ustadz");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error get ID: " + e.getMessage());
+        }
+        return id;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,19 +105,246 @@ public class KelasFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mainpanel = new javax.swing.JPanel();
+        panelkelas = new javax.swing.JPanel();
+        tNamaKelas = new javax.swing.JTextField();
+        tTingkatPendidikan = new javax.swing.JTextField();
+        BSimpan = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        tCari = new javax.swing.JTextField();
+        bHapus = new javax.swing.JButton();
+        bUbah = new javax.swing.JButton();
+        CBWaliKelas = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        bground = new javax.swing.JLabel();
+
+        panelkelas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tNamaKelas.setBorder(null);
+        panelkelas.add(tNamaKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 350, 20));
+
+        tTingkatPendidikan.setBorder(null);
+        panelkelas.add(tTingkatPendidikan, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 350, 20));
+
+        BSimpan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        BSimpan.setText("SIMPAN");
+        BSimpan.setBorder(null);
+        BSimpan.setBorderPainted(false);
+        BSimpan.setContentAreaFilled(false);
+        BSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BSimpanActionPerformed(evt);
+            }
+        });
+        panelkelas.add(BSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 80, 30));
+
+        jLabel1.setText("Nama Kelas");
+        panelkelas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, -1, -1));
+
+        jLabel2.setText("Tingkat Pendikan");
+        panelkelas.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, -1, -1));
+
+        jLabel3.setText("Wali Kelas");
+        panelkelas.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 330, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel4.setText("KELAS");
+        panelkelas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 390, 90));
+
+        tCari.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tCari.setBorder(null);
+        tCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tCariActionPerformed(evt);
+            }
+        });
+        panelkelas.add(tCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 280, 30));
+
+        bHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        bHapus.setForeground(new java.awt.Color(255, 255, 255));
+        bHapus.setText("HAPUS");
+        bHapus.setBorder(null);
+        bHapus.setBorderPainted(false);
+        bHapus.setContentAreaFilled(false);
+        bHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bHapusActionPerformed(evt);
+            }
+        });
+        panelkelas.add(bHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 80, 30));
+
+        bUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        bUbah.setForeground(new java.awt.Color(255, 255, 255));
+        bUbah.setText("UBAH");
+        bUbah.setBorder(null);
+        bUbah.setBorderPainted(false);
+        bUbah.setContentAreaFilled(false);
+        bUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahActionPerformed(evt);
+            }
+        });
+        panelkelas.add(bUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 420, 90, 30));
+
+        CBWaliKelas.setBorder(null);
+        CBWaliKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CBWaliKelasActionPerformed(evt);
+            }
+        });
+        panelkelas.add(CBWaliKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 350, -1));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        panelkelas.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 140, -1, 430));
+
+        bground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/datakelas.jpg"))); // NOI18N
+        panelkelas.add(bground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        javax.swing.GroupLayout mainpanelLayout = new javax.swing.GroupLayout(mainpanel);
+        mainpanel.setLayout(mainpanelLayout);
+        mainpanelLayout.setHorizontalGroup(
+            mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelkelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        mainpanelLayout.setVerticalGroup(
+            mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelkelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(mainpanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(mainpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCariActionPerformed
+        // TODO add your handling code here:
+        model.setRowCount(0);
+        try {
+            ResultSet rs = kls.cariKelas(tCari.getText());
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)
+                });
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }//GEN-LAST:event_tCariActionPerformed
+
+    private void CBWaliKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBWaliKelasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CBWaliKelasActionPerformed
+
+    private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus!");
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                kls.setId_kelas(Integer.parseInt(jTable1.getValueAt(row, 0).toString()));
+                kls.hapusDataKelas();
+                loadTable();
+                resetForm();
+            }
+        }
+    }//GEN-LAST:event_bHapusActionPerformed
+
+    private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        String selectedWali = CBWaliKelas.getSelectedItem().toString();
+
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data di tabel yang ingin diubah!");
+        } else if (tNamaKelas.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
+            JOptionPane.showMessageDialog(this, "Lengkapi data sebelum mengubah!");
+        } else {
+            kls.setId_kelas(Integer.parseInt(jTable1.getValueAt(row, 0).toString()));
+            kls.setNama_kelas(tNamaKelas.getText());
+            kls.setTingkat_pendidikan(tTingkatPendidikan.getText());
+            kls.setWali_ustadz_id(getSelectedUstadzId(selectedWali));
+
+            kls.ubahDataKelas();
+            loadTable();
+            resetForm();
+        }
+    }//GEN-LAST:event_bUbahActionPerformed
+
+    private void BSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BSimpanActionPerformed
+                                       
+   String selectedWali = CBWaliKelas.getSelectedItem().toString();
+
+        if (tNamaKelas.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
+            JOptionPane.showMessageDialog(this, "Lengkapi data dan pilih Wali Kelas!");
+        } else {
+            kls.setNama_kelas(tNamaKelas.getText());
+            kls.setTingkat_pendidikan(tTingkatPendidikan.getText());
+            kls.setWali_ustadz_id(getSelectedUstadzId(selectedWali));
+
+            kls.tambahDataKelas();
+            loadTable();
+            resetForm();
+        }
+    }//GEN-LAST:event_BSimpanActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        if (row != -1) {
+            tNamaKelas.setText(jTable1.getValueAt(row, 1).toString());
+            tTingkatPendidikan.setText(jTable1.getValueAt(row, 2).toString());
+            CBWaliKelas.setSelectedItem(jTable1.getValueAt(row, 3).toString());
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BSimpan;
+    private javax.swing.JComboBox<String> CBWaliKelas;
+    private javax.swing.JButton bHapus;
+    private javax.swing.JButton bUbah;
+    private javax.swing.JLabel bground;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JPanel mainpanel;
+    private javax.swing.JPanel panelkelas;
+    private javax.swing.JTextField tCari;
+    private javax.swing.JTextField tNamaKelas;
+    private javax.swing.JTextField tTingkatPendidikan;
     // End of variables declaration//GEN-END:variables
 }
