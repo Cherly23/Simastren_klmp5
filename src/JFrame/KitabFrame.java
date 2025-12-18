@@ -4,18 +4,98 @@
  */
 package JFrame;
 
-/**
- *
- * @author cherly
- */
-public class KitabFrame extends javax.swing.JPanel {
+import java.awt.CardLayout;
+import kelas.DataKitab;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import kelas.Koneksi;
 
-    /**
-     * Creates new form KitabFrame
-     */
+
+
+public class KitabFrame extends javax.swing.JFrame{
+    
+//    Connection conn;
+//    
+//    private javax.swing.JTextField txtIdKitab;
+//    private javax.swing.JTextField txtNamaKitab;
+//    private javax.swing.JComboBox<String> cmbKelas;
+//    private javax.swing.JComboBox<String> cmbPengajar;
+//    private javax.swing.JTable jTable1;
+
     public KitabFrame() {
         initComponents();
+        loadKelas();
     }
+    
+    void loadKelas() {
+        if (cmbKelas == null) return;
+        cmbKelas.removeAllItems();
+        cmbKelas.addItem("-- Pilih Kelas --");
+        
+        DataKitab ktb = new DataKitab();
+        try (ResultSet rs = ktb.dataComboBoxKelas()) {
+            while (rs.next()) {
+                cmbKelas.addItem(rs.getString("nama_kelas"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data Kelas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    void loadPengajar() {
+        if (cmbPengajar == null) return;
+        cmbPengajar.removeAllItems();
+        cmbPengajar.addItem("-- Pilih Pengajar --");
+        
+        
+        DataKitab ktb = new DataKitab();
+        try (ResultSet rs = ktb.dataComboBoxUstadz()) {
+            while (rs.next()) {
+               
+                cmbPengajar.addItem(rs.getString("nama_ustadz")); 
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data Pengajar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    void resetForm() {
+        if (txtIdKitab != null) txtIdKitab.setEditable(false);
+        if (txtNamaKitab != null) txtNamaKitab.setText(null);
+        if (cmbKelas != null) cmbKelas.setSelectedIndex(0);
+        if (cmbPengajar != null) cmbPengajar.setSelectedIndex(0);
+    }
+
+    void load_table() {
+    DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID Kitab");
+        model.addColumn("ID Kitab");
+        model.addColumn("ID Kitab");
+        model.addColumn("ID Kitab");
+
+        try {
+            DataKitab ktb = new DataKitab();
+            ResultSet result = ktb.loadData();
+            while (result.next()) {
+                model.addRow(new Object[] {
+                result.getInt("id_kitab"),
+                result.getInt("nama_kitab"),
+                result.getInt("ustadz_id"),
+                result.getInt("kelas_id"),
+                result.getInt("id_kitab")
+            });    
+            }
+            tblKitab.setModel(model);
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Eror Tabel : " + sQLException);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,19 +106,231 @@ public class KitabFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        tSearch = new javax.swing.JTextField();
+        btnUbah = new javax.swing.JButton();
+        txtIdKitab = new javax.swing.JTextField();
+        txtNamaKitab = new javax.swing.JTextField();
+        btnHapus = new javax.swing.JButton();
+        btnTambah = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        cmbKelas = new javax.swing.JComboBox<>();
+        cmbPengajar = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblKitab = new javax.swing.JTable();
+        btnReset1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tSearch.setBorder(null);
+        getContentPane().add(tSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, 300, 30));
+
+        btnUbah.setBackground(new java.awt.Color(0, 0, 0));
+        btnUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUbah.setForeground(new java.awt.Color(255, 255, 255));
+        btnUbah.setText("Ubah");
+        btnUbah.setContentAreaFilled(false);
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 470, 70, 40));
+
+        txtIdKitab.setBorder(null);
+        getContentPane().add(txtIdKitab, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, 350, 20));
+
+        txtNamaKitab.setBorder(null);
+        txtNamaKitab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNamaKitabActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtNamaKitab, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 350, 30));
+
+        btnHapus.setBackground(new java.awt.Color(0, 0, 0));
+        btnHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        btnHapus.setText(" Hapus");
+        btnHapus.setContentAreaFilled(false);
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 470, 90, 40));
+
+        btnTambah.setBackground(new java.awt.Color(0, 0, 0));
+        btnTambah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnTambah.setForeground(new java.awt.Color(255, 255, 255));
+        btnTambah.setText("Tambah");
+        btnTambah.setContentAreaFilled(false);
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 470, 90, 40));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel2.setText("DATA KITAB");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 280, 50));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText(" id_kitab");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, -1, 50));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText(" Nama Kitab");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, -1, 40));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText(" Kelas");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 290, 50, 40));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText(" Pengajar");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, 40));
+
+        cmbKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        cmbKelas.setBorder(null);
+        getContentPane().add(cmbKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 330, 350, 30));
+
+        cmbPengajar.setBorder(null);
+        getContentPane().add(cmbPengajar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 410, 350, 30));
+
+        tblKitab.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblKitab);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 130, -1, -1));
+
+        btnReset1.setBackground(new java.awt.Color(0, 0, 0));
+        btnReset1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnReset1.setForeground(new java.awt.Color(255, 255, 255));
+        btnReset1.setText("  Reset");
+        btnReset1.setContentAreaFilled(false);
+        btnReset1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReset1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnReset1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 470, 80, 40));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ASUS\\Downloads\\Data_Kitab.png")); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        DataKitab dataKitabHapus = new DataKitab();
+        
+        dataKitabHapus.setId_kitab(Integer.parseInt(txtIdKitab.getText()));
+        
+        dataKitabHapus.deleteData();
+        
+        resetForm();
+        
+        load_table();
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        //
+        if (cmbKelas.getSelectedIndex() == 0 || cmbPengajar.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Pilih Kelas dan Pengajar terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String namaKitab = txtIdKitab.getText();
+        String namaKelas = cmbKelas.getSelectedItem().toString();
+        String namaUstadz = cmbPengajar.getSelectedItem().toString();
+
+        DataKitab dataKitab = new DataKitab();
+        int idUstadz = -1;
+        int idKelas = -1;
+
+        try {
+            ResultSet rsUstadz = dataKitab.konversiUstadzId(namaUstadz);
+            if (rsUstadz != null && rsUstadz.next()) {
+                idUstadz = rsUstadz.getInt("id_ustadz");
+            }
+
+            ResultSet rsKelas = dataKitab.konversiKelasId(namaKelas);
+            if (rsKelas != null && rsKelas.next()) {
+                idKelas = rsKelas.getInt("id_kelas");
+            }
+
+            if (idUstadz != -1 && idKelas != -1) {
+                dataKitab.setNama_kitab(namaKitab);
+                dataKitab.setUstadz_id(idUstadz);
+                dataKitab.setKelas_id(idKelas);
+
+                dataKitab.saveData();
+
+                load_table();
+                resetForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menemukan ID Ustadz atau Kelas.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Kesalahan SQL saat menyimpan data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void btnReset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReset1ActionPerformed
+        // TODO add your handling code here:
+        resetForm();
+    }//GEN-LAST:event_btnReset1ActionPerformed
+
+    private void txtNamaKitabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaKitabActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNamaKitabActionPerformed
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        DataKitab  dataKitabUbah = new DataKitab();
+
+        dataKitabUbah.setId_kitab(Integer.parseInt(txtIdKitab.getText()));
+        dataKitabUbah.setNama_kitab(txtNamaKitab.getText());
+
+        dataKitabUbah.updateData();
+
+        resetForm();
+
+        load_table();
+    }//GEN-LAST:event_btnUbahActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnReset1;
+    private javax.swing.JButton btnTambah;
+    private javax.swing.JButton btnUbah;
+    private javax.swing.JComboBox<String> cmbKelas;
+    private javax.swing.JComboBox<String> cmbPengajar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField tSearch;
+    private javax.swing.JTable tblKitab;
+    private javax.swing.JTextField txtIdKitab;
+    private javax.swing.JTextField txtNamaKitab;
     // End of variables declaration//GEN-END:variables
 }
