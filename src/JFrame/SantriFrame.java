@@ -193,8 +193,6 @@ public class SantriFrame extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jTanggalMasuk = new com.toedter.calendar.JDateChooser();
-        jTanggalLhir = new com.toedter.calendar.JDateChooser();
         jLabel16 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
@@ -215,6 +213,8 @@ public class SantriFrame extends javax.swing.JPanel {
         txtWali1 = new javax.swing.JTextField();
         Jrperempuan = new javax.swing.JRadioButton();
         JrLaki = new javax.swing.JRadioButton();
+        jTanggalLhir = new com.toedter.calendar.JDateChooser();
+        jTanggalMasuk = new com.toedter.calendar.JDateChooser();
         baground = new javax.swing.JLabel();
 
         setLayout(new java.awt.CardLayout());
@@ -335,8 +335,6 @@ public class SantriFrame extends javax.swing.JPanel {
         jLabel17.setForeground(new java.awt.Color(11, 43, 38));
         jLabel17.setText("Kelas");
         InputSantri.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 500, 80, 30));
-        InputSantri.add(jTanggalMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 380, 370, 40));
-        InputSantri.add(jTanggalLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 290, 370, 40));
 
         jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(11, 43, 38));
@@ -459,6 +457,8 @@ public class SantriFrame extends javax.swing.JPanel {
         buttonGroup1.add(JrLaki);
         JrLaki.setText("Laki-laki");
         InputSantri.add(JrLaki, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 550, -1, -1));
+        InputSantri.add(jTanggalLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 350, 30));
+        InputSantri.add(jTanggalMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 380, 350, 30));
 
         baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Input_Santri.png"))); // NOI18N
         InputSantri.add(baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 710));
