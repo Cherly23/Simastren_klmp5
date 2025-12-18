@@ -37,9 +37,9 @@ public class DashboardFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pn_utama.removeAll();
+                pn_utama.add(new Dashboard2());
                 pn_utama.repaint();
                 pn_utama.revalidate();
-                pn_utama.add(new Dashboard2());
             }
         });
         
@@ -47,9 +47,9 @@ public class DashboardFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pn_utama.removeAll();
+                pn_utama.add(new SantriFrame());
                 pn_utama.repaint();
                 pn_utama.revalidate();
-                pn_utama.add(new Dashboard2());
             }
         });
          
@@ -57,9 +57,9 @@ public class DashboardFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pn_utama.removeAll();
+                pn_utama.add(new Dashboard2());
                 pn_utama.repaint();
                 pn_utama.revalidate();
-                pn_utama.add(new Dashboard2());
             }
         });
           
