@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author cherly
  */
 public class DataKelas extends Koneksi {
-    private String nama_kelas, tingkat_pendidikan;
+    private String nama_kelas;
     private int id_kelas, wali_ustadz_id;
     
     private Connection koneksi; 
@@ -28,30 +28,37 @@ public class DataKelas extends Koneksi {
     public DataKelas() {
         this.koneksi = super.configDB(); 
     }
-    
-    
-    public String getNama_kelas() { return nama_kelas; }
-    public void setNama_kelas(String nama_kelas) { this.nama_kelas = nama_kelas; }
+        
+    public String getNama_kelas() { 
+        return nama_kelas; 
+    }
+    public void setNama_kelas(String nama_kelas) { 
+        this.nama_kelas = nama_kelas; 
+    }
 
-    public String getTingkat_pendidikan() { return tingkat_pendidikan; }
-    public void setTingkat_pendidikan(String tingkat_pendidikan) { this.tingkat_pendidikan = tingkat_pendidikan; }
+    public int getId_kelas() { 
+        return id_kelas; 
+    }
+    public void setId_kelas(int id_kelas) { 
+        this.id_kelas = id_kelas; 
+    }
 
-    public int getId_kelas() { return id_kelas; }
-    public void setId_kelas(int id_kelas) { this.id_kelas = id_kelas; }
-
-    public int getWali_ustadz_id() { return wali_ustadz_id; }
-    public void setWali_ustadz_id(int wali_ustadz_id) { this.wali_ustadz_id = wali_ustadz_id; }
+    public int getWali_ustadz_id() { 
+        return wali_ustadz_id; 
+    }
+    public void setWali_ustadz_id(int wali_ustadz_id) { 
+        this.wali_ustadz_id = wali_ustadz_id;
+    }
 
     
 
     public void tambahDataKelas() {
         
-        query = "INSERT INTO kelas (nama_kelas, tingkat_pendidikan, wali_ustadz_id) VALUES (?,?,?)";
+        query = "INSERT INTO kelas (nama_kelas, wali_ustadz_id) VALUES (?,?)";
         try {
             ps = koneksi.prepareStatement(query);
             ps.setString(1, nama_kelas);
-            ps.setString(2, tingkat_pendidikan);
-            ps.setInt(3, wali_ustadz_id);
+            ps.setInt(2, wali_ustadz_id);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
         } catch (SQLException e) {
@@ -60,13 +67,12 @@ public class DataKelas extends Koneksi {
     }
 
     public void ubahDataKelas() {
-        query = "UPDATE kelas SET nama_kelas=?, tingkat_pendidikan=?, wali_ustadz_id=? WHERE id_kelas=?";
+        query = "UPDATE kelas SET nama_kelas=?, wali_ustadz_id=? WHERE id_kelas=?";
         try {
             ps = koneksi.prepareStatement(query);
             ps.setString(1, nama_kelas);
-            ps.setString(2, tingkat_pendidikan);
-            ps.setInt(3, wali_ustadz_id);
-            ps.setInt(4, id_kelas);
+            ps.setInt(2, wali_ustadz_id);
+            ps.setInt(3, id_kelas);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Berhasil Diperbarui");
         } catch (SQLException e) {
@@ -88,7 +94,7 @@ public class DataKelas extends Koneksi {
 
     public ResultSet tampilKelas() {
         // Menggabungkan tabel kelas dan ustadz untuk mendapatkan nama wali
-        query = "SELECT k.id_kelas, k.nama_kelas, k.tingkat_pendidikan, u.nama_ustadz " +
+        query = "SELECT k.id_kelas, k.nama_kelas, u.nama_ustadz " +
                 "FROM kelas k JOIN ustadz u ON k.wali_ustadz_id = u.id_ustadz";
         try {
             st = koneksi.createStatement();
@@ -100,7 +106,7 @@ public class DataKelas extends Koneksi {
     }
 
     public ResultSet cariKelas(String cari) {
-        query = "SELECT * FROM kelas WHERE nama_kelas LIKE ? OR tingkat_pendidikan LIKE ?";
+        query = "SELECT * FROM kelas WHERE nama_kelas LIKE ?";
         try {
             ps = koneksi.prepareStatement(query);
             ps.setString(1, "%" + cari + "%");
@@ -126,4 +132,29 @@ public class DataKelas extends Koneksi {
         }
         return idBaru;
     }
+    
+    public ResultSet dataComboBox() {
+        try {
+            query = "SELECT nama_kelas FROM kelas";
+            
+            st = koneksi.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Eror : " + sQLException.getMessage());
+        }
+        return rs;
+    }
+    
+    public ResultSet konversi() {
+        try {
+            query = "SELECT id_kelas FROM kelas WHERE nama_kelas = ?";
+            
+            ps = koneksi.prepareStatement(query);
+            ps.setString(1, this.nama_kelas);
+            rs = ps.executeQuery();
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Eror : " + sQLException.getMessage());
+        }
+        return rs;  
+    }  
 }

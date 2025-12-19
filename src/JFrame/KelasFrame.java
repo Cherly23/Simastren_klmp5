@@ -74,8 +74,8 @@ public class KelasFrame extends javax.swing.JPanel {
 }
 
     private void resetForm() {
-        tNamaKelas.setText("");
-        tTingkatPendidikan.setText("");
+        tID.setText("");
+        tNamaLengkap.setText("");
         CBWaliKelas.setSelectedIndex(0);
         tCari.setText("");
     }
@@ -107,11 +107,10 @@ public class KelasFrame extends javax.swing.JPanel {
 
         mainpanel = new javax.swing.JPanel();
         panelkelas = new javax.swing.JPanel();
-        tNamaKelas = new javax.swing.JTextField();
-        tTingkatPendidikan = new javax.swing.JTextField();
+        tID = new javax.swing.JTextField();
+        tNamaLengkap = new javax.swing.JTextField();
         BSimpan = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         tCari = new javax.swing.JTextField();
@@ -120,15 +119,16 @@ public class KelasFrame extends javax.swing.JPanel {
         CBWaliKelas = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
         bground = new javax.swing.JLabel();
 
         panelkelas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tNamaKelas.setBorder(null);
-        panelkelas.add(tNamaKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 350, 20));
+        tID.setBorder(null);
+        panelkelas.add(tID, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 350, 20));
 
-        tTingkatPendidikan.setBorder(null);
-        panelkelas.add(tTingkatPendidikan, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 350, 20));
+        tNamaLengkap.setBorder(null);
+        panelkelas.add(tNamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 350, 20));
 
         BSimpan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         BSimpan.setForeground(new java.awt.Color(255, 255, 255));
@@ -143,17 +143,14 @@ public class KelasFrame extends javax.swing.JPanel {
         });
         panelkelas.add(BSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 80, 30));
 
-        jLabel1.setText("Nama Kelas");
+        jLabel1.setText("ID Kelas");
         panelkelas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, -1, -1));
-
-        jLabel2.setText("Tingkat Pendikan");
-        panelkelas.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, -1, -1));
 
         jLabel3.setText("Wali Kelas");
         panelkelas.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 330, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel4.setText("KELAS");
+        jLabel4.setText("DATA KELAS");
         panelkelas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 390, 90));
 
         tCari.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -218,6 +215,9 @@ public class KelasFrame extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTable1);
 
         panelkelas.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 140, -1, 430));
+
+        jLabel5.setText("Nama Kelas");
+        panelkelas.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, -1, -1));
 
         bground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/datakelas.jpg"))); // NOI18N
         panelkelas.add(bground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -287,12 +287,11 @@ public class KelasFrame extends javax.swing.JPanel {
 
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Pilih data di tabel yang ingin diubah!");
-        } else if (tNamaKelas.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
+        } else if (tID.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
             JOptionPane.showMessageDialog(this, "Lengkapi data sebelum mengubah!");
         } else {
             kls.setId_kelas(Integer.parseInt(jTable1.getValueAt(row, 0).toString()));
-            kls.setNama_kelas(tNamaKelas.getText());
-            kls.setTingkat_pendidikan(tTingkatPendidikan.getText());
+            kls.setNama_kelas(tID.getText());
             kls.setWali_ustadz_id(getSelectedUstadzId(selectedWali));
 
             kls.ubahDataKelas();
@@ -305,11 +304,11 @@ public class KelasFrame extends javax.swing.JPanel {
                                        
    String selectedWali = CBWaliKelas.getSelectedItem().toString();
 
-        if (tNamaKelas.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
+        if (tID.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
             JOptionPane.showMessageDialog(this, "Lengkapi data dan pilih Wali Kelas!");
         } else {
-            kls.setNama_kelas(tNamaKelas.getText());
-            kls.setTingkat_pendidikan(tTingkatPendidikan.getText());
+            kls.setNama_kelas(tID.getText());
+            kls.setTingkat_pendidikan(tNamaLengkap.getText());
             kls.setWali_ustadz_id(getSelectedUstadzId(selectedWali));
 
             kls.tambahDataKelas();
@@ -322,8 +321,8 @@ public class KelasFrame extends javax.swing.JPanel {
         // TODO add your handling code here:
         int row = jTable1.getSelectedRow();
         if (row != -1) {
-            tNamaKelas.setText(jTable1.getValueAt(row, 1).toString());
-            tTingkatPendidikan.setText(jTable1.getValueAt(row, 2).toString());
+            tID.setText(jTable1.getValueAt(row, 1).toString());
+            tNamaLengkap.setText(jTable1.getValueAt(row, 2).toString());
             CBWaliKelas.setSelectedItem(jTable1.getValueAt(row, 3).toString());
         }
     }//GEN-LAST:event_jTable1MouseClicked
@@ -336,15 +335,15 @@ public class KelasFrame extends javax.swing.JPanel {
     private javax.swing.JButton bUbah;
     private javax.swing.JLabel bground;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel mainpanel;
     private javax.swing.JPanel panelkelas;
     private javax.swing.JTextField tCari;
-    private javax.swing.JTextField tNamaKelas;
-    private javax.swing.JTextField tTingkatPendidikan;
+    private javax.swing.JTextField tID;
+    private javax.swing.JTextField tNamaLengkap;
     // End of variables declaration//GEN-END:variables
 }

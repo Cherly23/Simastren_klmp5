@@ -457,7 +457,7 @@ public class SantriFrame extends javax.swing.JPanel {
         buttonGroup1.add(JrLaki);
         JrLaki.setText("Laki-laki");
         InputSantri.add(JrLaki, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 550, -1, -1));
-        InputSantri.add(jTanggalMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 380, 360, 30));
+        InputSantri.add(jTanggalMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 380, 360, 30));
         InputSantri.add(jTanggalLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 300, 360, 30));
 
         baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Input_Santri.png"))); // NOI18N
@@ -541,7 +541,7 @@ public class SantriFrame extends javax.swing.JPanel {
         // TODO add your handling code here:
         DataSantri str = new DataSantri();
         DataKelas kls = new DataKelas();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     try {
         str.setNama_santri(txtNamleng.getText());
