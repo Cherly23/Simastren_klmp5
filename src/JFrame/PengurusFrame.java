@@ -2,19 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package JFrame;
+package jFrame;
 
-import javax.swing.ImageIcon;
-import java.awt.Image;
-
+import kelas.DataPengurus;
+import kelas.DataPengajar;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 /**
  *
  * @author giantluigi
@@ -28,20 +24,74 @@ public class PengurusFrame extends javax.swing.JPanel {
         initComponents();
         load_table();
         reset () ;
+        ComboBox () ;
+        autoId () ;
 }
-     void reset(){
-        jNamaLengkap.setText(null);
-        jAlamat.setText(null);
-        jNohp.setText(null);
+    void autoId() {
+        try {
+            DataPengurus pgr = new DataPengurus() ;
+            ResultSet rs = pgr.autoId () ;
+            
+            if (rs.next()) {
+                int id = rs.getInt("ID") + 1;
+                tID.setText(String.valueOf(id));
+            }else {
+                tID.setText("1");
+            }
+        } catch (SQLException sQLException) {
+             JOptionPane.showMessageDialog(null, "EROR :" + sQLException.getMessage());
+        }
+            }
+        
+    
+     void reset () {
+        tID.setText(null);
+        JnamaLengkap.setSelectedItem(null);
+        jJabatan.setText(null);
+        buttonGroup1.clearSelection();
+    }
+
+        
+ 
+
+    void ComboBox() {
+        try {
+            DataPengajar value = new DataPengajar();
+            ResultSet rs = value.dataComboBox();
+            
+            while (rs.next()) {
+                String data = rs.getString("nama_ustadz");
+                JnamaLengkap.addItem(data);
+                
+            }
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, " EROR ComboBox : " + sQLException.getMessage());
+        }
     }
      void load_table() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Nama Lengkap");
         model.addColumn("Alamat");
         model.addColumn("No.Handphone");
-     }
-
+     
+        try {
+            DataPengurus pgr = new DataPengurus();
+            ResultSet result = pgr.TampilPengurus();
+            while (result.next()){
+                model.addRow(new Object[]{
+                    result.getInt("id_pengurus"),
+                    result.getString("nama_ustadz"),
+                    result.getString("jabatan"),
+                    result.getString("jenis_kelamin"),
+                });
+            }
+            tblPengurus.setModel(model);
+        } catch (SQLException sQLException) {
+            System.out.println("Eror Tabel : " + sQLException.getMessage());
+        }
 }
+
+
     
 
     /**
@@ -53,39 +103,43 @@ public class PengurusFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jNohp = new javax.swing.JTextField();
-        jNamaLengkap = new javax.swing.JTextField();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jJabatan = new javax.swing.JTextField();
+        tID = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblPengurus = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        JnamaLengkap = new javax.swing.JComboBox<>();
         jButtonTambah = new javax.swing.JButton();
         BtnHapus = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        BtnSimpan = new javax.swing.JButton();
-        jAlamat = new javax.swing.JTextField();
+        BtnUbah = new javax.swing.JButton();
         BACKGROUND = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1064, 715));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jNohp.setText("jTextField1");
-        jNohp.setOpaque(true);
-        add(jNohp, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 342, 270, 30));
+        jJabatan.setText("jTextField1");
+        jJabatan.setOpaque(true);
+        add(jJabatan, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 350, 280, 30));
 
-        jNamaLengkap.setText("jTextField1");
-        jNamaLengkap.setOpaque(true);
-        add(jNamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 260, 20));
+        tID.setText("jTextField1");
+        tID.setOpaque(true);
+        add(tID, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 190, 280, 30));
 
         jTextField4.setText("jTextField4");
         jTextField4.setOpaque(true);
         add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 70, 280, -1));
 
-        jTable1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblPengurus.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        tblPengurus.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -96,8 +150,8 @@ public class PengurusFrame extends javax.swing.JPanel {
                 "NAMA", "ALAMAT", "GENDER"
             }
         ));
-        jTable1.setShowGrid(false);
-        jScrollPane1.setViewportView(jTable1);
+        tblPengurus.setShowGrid(false);
+        jScrollPane1.setViewportView(tblPengurus);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 120, 560, 440));
 
@@ -106,16 +160,33 @@ public class PengurusFrame extends javax.swing.JPanel {
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 320, 60));
 
         jLabel3.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
-        jLabel3.setText("NAMA LENGKAP");
-        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, -1, -1));
+        jLabel3.setText("  ID Pengurus");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
-        jLabel4.setText("ALAMAT");
-        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, -1, -1));
+        jLabel4.setText("  Nama Lengkap");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
-        jLabel2.setText("NO HANDPHONE");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, -1, -1));
+        jLabel2.setText("Jenis Kelamin ");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 390, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
+        jLabel5.setText("  Jabatan");
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 310, -1, -1));
+
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        jRadioButton1.setText("LAKI -LAKI");
+        add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 430, -1, -1));
+
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        jRadioButton2.setText("PEREMPUAN");
+        add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 430, -1, -1));
+
+        JnamaLengkap.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        add(JnamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 270, -1));
 
         jButtonTambah.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
         jButtonTambah.setForeground(new java.awt.Color(255, 255, 255));
@@ -126,7 +197,7 @@ public class PengurusFrame extends javax.swing.JPanel {
                 jButtonTambahActionPerformed(evt);
             }
         });
-        add(jButtonTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 500, -1, 30));
+        add(jButtonTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 510, -1, 20));
 
         BtnHapus.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
         BtnHapus.setForeground(new java.awt.Color(255, 255, 255));
@@ -137,7 +208,7 @@ public class PengurusFrame extends javax.swing.JPanel {
                 BtnHapusActionPerformed(evt);
             }
         });
-        add(BtnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 500, 80, 30));
+        add(BtnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 510, 80, 20));
 
         jButton3.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
@@ -148,21 +219,18 @@ public class PengurusFrame extends javax.swing.JPanel {
                 jButton3ActionPerformed(evt);
             }
         });
-        add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 500, -1, -1));
+        add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 510, 70, 20));
 
-        BtnSimpan.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
-        BtnSimpan.setForeground(new java.awt.Color(255, 255, 255));
-        BtnSimpan.setText("SIMPAN");
-        BtnSimpan.setContentAreaFilled(false);
-        BtnSimpan.addActionListener(new java.awt.event.ActionListener() {
+        BtnUbah.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        BtnUbah.setForeground(new java.awt.Color(255, 255, 255));
+        BtnUbah.setText("UBAH");
+        BtnUbah.setContentAreaFilled(false);
+        BtnUbah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnSimpanActionPerformed(evt);
+                BtnUbahActionPerformed(evt);
             }
         });
-        add(BtnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 500, -1, -1));
-
-        jAlamat.setText("jTextField1");
-        add(jAlamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 270, -1));
+        add(BtnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 510, 70, 20));
 
         BACKGROUND.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
         BACKGROUND.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGE/dataPengurus.png"))); // NOI18N
@@ -173,38 +241,58 @@ public class PengurusFrame extends javax.swing.JPanel {
 
     private void jButtonTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTambahActionPerformed
         DataPengurus prd = new DataPengurus();
-        prd.setProductName(txtName.getText());
-        prd.setProductDescription(txtDesc.getText());
-        prd.setProductPrice(Integer.parseInt(txtPrice.getText()));
+        DataPengajar pgr = new DataPengajar() ;
         
-        if (cbxCategory.getSelectedItem()=="Active") {
-            prd.setProductCategory(1);
-        } else {
-            prd.setProductCategory(0);
+        try {
+            prd.setJabatan(jJabatan.getText());
+            pgr.setNama_ustadz(JnamaLengkap.getSelectedItem().toString());
+            ResultSet rs = pgr.konversi() ;
+            if (rs.next()) {
+                prd.setId_ustadz(rs.getInt("Id_ustadz"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error kangg mbakk!!" + e.getMessage()); ;
         }
-        prd.TambahProduct();
+        prd.TambahPengurus();
+                
         load_table();
         reset();
     }//GEN-LAST:event_jButtonTambahActionPerformed
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-        PengurusFrame pgr = new DataPengurus();
-        pgr.setNoHandhone(Integer.parseInt(jNohp.getText()));
-        pgr.HapusDataPengurus();
-
+        DataPengurus prd = new DataPengurus();
+        prd.setId_pengurus(Integer.parseInt(tID.getText()));
+        prd.HapusPengurus();
+                
         load_table();
         reset();
+    
     }//GEN-LAST:event_BtnHapusActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+       reset();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-        String nama = jNamaLengkap.getText();
-        String alaat = jComboBoxAlamat.getSelectedItem().toString();
-        String noHp = jNohp.getText();
-    }//GEN-LAST:event_BtnSimpanActionPerformed
+    private void BtnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnUbahActionPerformed
+        DataPengurus prd = new DataPengurus();
+        DataPengajar pgr = new DataPengajar() ;
+        
+        try {
+            prd.setJabatan(jJabatan.getText());
+            pgr.setNama_ustadz(JnamaLengkap.getSelectedItem().toString());
+            ResultSet rs = pgr.konversi() ;
+            if (rs.next()) {
+                prd.setId_ustadz(rs.getInt("Id_ustadz"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error kangg mbakk!!" + e.getMessage()); ;
+        }
+        prd.UbahPengurus();
+                
+        load_table();
+        reset();
+    
+    }//GEN-LAST:event_BtnUbahActionPerformed
     private void initComponent() {
         
     }
@@ -212,18 +300,22 @@ public class PengurusFrame extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BACKGROUND;
     private javax.swing.JButton BtnHapus;
-    private javax.swing.JButton BtnSimpan;
-    private javax.swing.JTextField jAlamat;
+    private javax.swing.JButton BtnUbah;
+    private javax.swing.JComboBox<String> JnamaLengkap;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButtonTambah;
+    private javax.swing.JTextField jJabatan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jNamaLengkap;
-    private javax.swing.JTextField jNohp;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField tID;
+    private javax.swing.JTable tblPengurus;
     // End of variables declaration//GEN-END:variables
 }
