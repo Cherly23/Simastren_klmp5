@@ -123,13 +123,13 @@ public class DataPengajar extends Koneksi{
         
     }
     
-    public void SimpanUstadz(){
-    if (id_ustadz == 0){
-        tambahDataUstadz();
-    } else{
-        ubahDataUstadz();
-    }
-    }
+//    public void SimpanUstadz(){
+//    if (id_ustadz == 0){
+//        tambahDataUstadz();
+//    } else{
+//        ubahDataUstadz();
+//    }
+//    }
     
     
     public ResultSet tampilUstadz(){
@@ -179,4 +179,29 @@ public class DataPengajar extends Koneksi{
         }
         return rs;
     }
+    
+    public ResultSet dataComboBox() {
+        try {
+            query = "SELECT nama_ustadz FROM ustadz";
+            
+            st = koneksi.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Eror : " + sQLException.getMessage());
+        }
+        return rs;
+    }
+    
+    public ResultSet konversi() {
+        try {
+            query = "SELECT id_ustadz FROM ustadz WHERE nama_ustadz = ?";
+            
+            ps = koneksi.prepareStatement(query);
+            ps.setString(1, this.nama_ustadz);
+            rs = ps.executeQuery();
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Eror : " + sQLException.getMessage());
+        }
+        return rs;  
+    }  
 }

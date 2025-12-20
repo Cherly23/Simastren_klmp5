@@ -3,18 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package JFrame;
-import com.mysql.cj.jdbc.PreparedStatementWrapper;
-import kelas.DataKelas;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
-import java.sql.Connection;
-import kelas.Koneksi;
-import java.sql.PreparedStatement;
-import javax.swing.ButtonGroup;
 import kelas.DataKelas;
 import kelas.DataSantri;
 /**
@@ -32,8 +27,10 @@ public class SantriFrame extends javax.swing.JPanel {
         load_table();
         ComboBox();
         reset();
+//        autoID();
     }
     void reset() {
+        txtIdsantri.setText(null);
         txtNamleng.setText(null);
         txtTempatLhir.setText(null);
         jTanggalLhir.setCalendar(null);
@@ -42,10 +39,27 @@ public class SantriFrame extends javax.swing.JPanel {
         txtWali1.setText(null);
         txtNoHp.setText(null);
         jTanggalMasuk.setCalendar(null);
-        cbxStatus.setSelectedItem(null);
-        
-        
+        cbxKelas.setSelectedItem(null);
+        cbxStatus.setSelectedItem(null);   
+
     }
+    
+//    void autoID() {
+//        try {
+//            DataSantri str = new DataSantri();
+//            ResultSet rs = str.autoID();
+//            
+//            if (rs.next()) {
+//                int id = rs.getInt("ID") + 1;
+//                txtIdsantri.setText(String.valueOf(id));
+//            }else {
+//                txtIdsantri.setText("1");
+//            }
+//        } catch (SQLException sQLException) {
+//            JOptionPane.showMessageDialog(null, "AutoId Eror : " + sQLException.getMessage());
+//        }
+//    }
+    
     void ComboBox() {
         try {
             DataKelas value = new DataKelas();
@@ -60,6 +74,7 @@ public class SantriFrame extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, " EROR ComboBox : " + sQLException.getMessage());
         }
     }
+    
     private void JmlhSantri() {
     try {
         DataSantri snt = new DataSantri();
@@ -79,8 +94,8 @@ public class SantriFrame extends javax.swing.JPanel {
         }
 
         // Set ke label
-        jmlhSantriPutri.setText(String.valueOf(putra));
-        jmlhSantriPutra.setText(String.valueOf(putri));
+        jmlhSantriPutri.setText(String.valueOf(putri));
+        jmlhSantriPutra.setText(String.valueOf(putra));
 
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(null, "EROR : " + e.getMessage());
@@ -99,11 +114,12 @@ public class SantriFrame extends javax.swing.JPanel {
     model.addColumn("Wali Santri");
     model.addColumn("No HP");
     model.addColumn("Tanggal Masuk");
+    model.addColumn("Kelas");
     model.addColumn("Status");
 
     try {
         DataSantri snr = new DataSantri();
-        ResultSet result = snr.cariSantri  (key);
+        ResultSet result = snr.cariSantri (key);
 
         while (result.next()) {
             String status = (result.getInt("status") == 1) ? "Mukim" : "Tidak Mukim";
@@ -117,6 +133,7 @@ public class SantriFrame extends javax.swing.JPanel {
                 result.getString("wali_santri"),
                 result.getString("no_hp"),
                 result.getString("tanggal_masuk"),
+                result.getString("nama_kelas"),
                 status
             });
         }
@@ -137,6 +154,7 @@ public class SantriFrame extends javax.swing.JPanel {
         model.addColumn("Wali Santri");
         model.addColumn("No HP");
         model.addColumn("Tanggal Masuk");
+        model.addColumn("Kelas");
         model.addColumn("Status");
         
         try {
@@ -154,12 +172,13 @@ public class SantriFrame extends javax.swing.JPanel {
                     result.getString("wali_santri"),
                     result.getString("no_hp"),
                     result.getString("tanggal_masuk"),
+                    result.getString("nama_kelas"),
                     status
                 });
             }
             tblSantri.setModel(model);
         } catch (SQLException sQLException) {
-            System.out.println("Eror : " + sQLException.getMessage());
+            System.out.println("Eror Tabel : " + sQLException.getMessage());
         }
     }
 
@@ -189,7 +208,6 @@ public class SantriFrame extends javax.swing.JPanel {
         Baground = new javax.swing.JLabel();
         InputSantri = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -219,6 +237,8 @@ public class SantriFrame extends javax.swing.JPanel {
 
         setLayout(new java.awt.CardLayout());
 
+        MainPanel.setLayout(new java.awt.CardLayout());
+
         DataSantri.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
@@ -228,13 +248,13 @@ public class SantriFrame extends javax.swing.JPanel {
 
         btnHapus.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnHapus.setForeground(new java.awt.Color(255, 255, 255));
-        btnHapus.setText("Hapus");
+        btnHapus.setText("   Hapus");
         btnHapus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnHapusMouseClicked(evt);
             }
         });
-        DataSantri.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 250, 60, 40));
+        DataSantri.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 250, 80, 40));
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(11, 43, 38));
@@ -248,7 +268,7 @@ public class SantriFrame extends javax.swing.JPanel {
 
         btnTambah.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnTambah.setForeground(new java.awt.Color(255, 255, 255));
-        btnTambah.setText("Tambah");
+        btnTambah.setText("  Tambah");
         btnTambah.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnTambahMouseClicked(evt);
@@ -258,13 +278,13 @@ public class SantriFrame extends javax.swing.JPanel {
 
         btnUbah.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnUbah.setForeground(new java.awt.Color(255, 255, 255));
-        btnUbah.setText("Ubah");
+        btnUbah.setText("    Ubah");
         btnUbah.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnUbahMouseClicked(evt);
             }
         });
-        DataSantri.add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 190, 50, 50));
+        DataSantri.add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 190, 80, 50));
 
         jmlhSantriPutra.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         jmlhSantriPutra.setForeground(new java.awt.Color(11, 43, 38));
@@ -282,6 +302,11 @@ public class SantriFrame extends javax.swing.JPanel {
         txtSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSearchActionPerformed(evt);
+            }
+        });
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSearchKeyTyped(evt);
             }
         });
         DataSantri.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 62, 320, 30));
@@ -304,73 +329,74 @@ public class SantriFrame extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblSantri);
 
-        DataSantri.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 307, 1000, 390));
+        DataSantri.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 1030, 310));
 
         Baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Santri_Mentahan.png"))); // NOI18N
         DataSantri.add(Baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1064, 655));
+
+        MainPanel.add(DataSantri, "card2");
 
         InputSantri.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel12.setText("Jenis Kelamin");
-        InputSantri.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 500, 130, 30));
-
-        jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel13.setText("INPUT SANTRI");
-        InputSantri.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 300, 50));
+        jLabel12.setText(" Jenis Kelamin");
+        InputSantri.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 450, 130, 30));
 
         jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(11, 43, 38));
         jLabel14.setText("Id santri");
-        InputSantri.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 80, 30));
+        InputSantri.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 80, 30));
 
         jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel15.setText("Nama Lengkap");
-        InputSantri.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 130, 30));
+        jLabel15.setText(" Nama Lengkap");
+        InputSantri.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 130, 30));
 
         jLabel17.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel17.setText("Kelas");
-        InputSantri.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 500, 80, 30));
+        jLabel17.setText(" Kelas");
+        InputSantri.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 440, 80, 40));
 
         jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel16.setText("Tanggal lahir");
-        InputSantri.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, 130, 30));
+        jLabel16.setText(" Tanggal lahir");
+        InputSantri.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 130, 40));
 
         jLabel18.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel18.setText("Tempat Lahir");
-        InputSantri.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 130, 30));
+        jLabel18.setText(" Tempat Lahir");
+        InputSantri.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 280, 130, 40));
 
         jLabel19.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel19.setText("Wali Santri");
-        InputSantri.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 180, 130, 30));
+        jLabel19.setText(" Wali Santri");
+        InputSantri.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 110, 130, 30));
 
         jLabel20.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel20.setText("No.HP");
-        InputSantri.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 260, 130, 30));
+        jLabel20.setText(" No.HP");
+        InputSantri.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 200, 130, 30));
 
         jLabel21.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel21.setText("Tanggal Masuk");
-        InputSantri.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 340, 130, 30));
+        jLabel21.setText(" Tanggal Masuk");
+        InputSantri.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 280, 130, 30));
 
         jLabel22.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel22.setText("Alamat");
-        InputSantri.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 420, 120, 30));
+        jLabel22.setText(" Alamat");
+        InputSantri.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 360, 120, 40));
 
-        cbxStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mukim", "Non Mukim" }));
-        InputSantri.add(cbxStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 460, 370, 30));
+        cbxStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mukim", "Tidak Mukim" }));
+        cbxStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxStatusActionPerformed(evt);
+            }
+        });
+        InputSantri.add(cbxStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 408, 350, -1));
 
-        cbxKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        InputSantri.add(cbxKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, 370, 30));
+        InputSantri.add(cbxKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 488, 350, -1));
 
         btnSimpan.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
@@ -380,7 +406,7 @@ public class SantriFrame extends javax.swing.JPanel {
                 btnSimpanMouseClicked(evt);
             }
         });
-        InputSantri.add(btnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 640, 60, 40));
+        InputSantri.add(btnSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 580, 60, 50));
 
         txtNoHp.setBorder(null);
         txtNoHp.addActionListener(new java.awt.event.ActionListener() {
@@ -388,10 +414,10 @@ public class SantriFrame extends javax.swing.JPanel {
                 txtNoHpActionPerformed(evt);
             }
         });
-        InputSantri.add(txtNoHp, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 290, 350, 28));
+        InputSantri.add(txtNoHp, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 240, 350, 20));
 
         txtIdsantri.setBorder(null);
-        InputSantri.add(txtIdsantri, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 116, 140, 30));
+        InputSantri.add(txtIdsantri, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 140, 30));
 
         txtNamleng.setBorder(null);
         txtNamleng.addActionListener(new java.awt.event.ActionListener() {
@@ -399,7 +425,7 @@ public class SantriFrame extends javax.swing.JPanel {
                 txtNamlengActionPerformed(evt);
             }
         });
-        InputSantri.add(txtNamleng, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 350, 28));
+        InputSantri.add(txtNamleng, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 158, 350, 20));
 
         txtTempatLhir.setBorder(null);
         txtTempatLhir.addActionListener(new java.awt.event.ActionListener() {
@@ -407,7 +433,7 @@ public class SantriFrame extends javax.swing.JPanel {
                 txtTempatLhirActionPerformed(evt);
             }
         });
-        InputSantri.add(txtTempatLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 374, 360, 30));
+        InputSantri.add(txtTempatLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, 350, 30));
 
         txtAlamat.setBorder(null);
         txtAlamat.addActionListener(new java.awt.event.ActionListener() {
@@ -415,32 +441,32 @@ public class SantriFrame extends javax.swing.JPanel {
                 txtAlamatActionPerformed(evt);
             }
         });
-        InputSantri.add(txtAlamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 460, 350, 26));
+        InputSantri.add(txtAlamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 406, 350, 20));
 
         jLabel24.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel24.setForeground(new java.awt.Color(11, 43, 38));
-        jLabel24.setText("Status Santri");
-        InputSantri.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 130, 30));
+        jLabel24.setText(" Status Santri");
+        InputSantri.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 360, 130, 40));
 
         btnBatal.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnBatal.setForeground(new java.awt.Color(255, 255, 255));
-        btnBatal.setText("Batal");
+        btnBatal.setText("   Batal");
         btnBatal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnBatalMouseClicked(evt);
             }
         });
-        InputSantri.add(btnBatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 640, 80, 40));
+        InputSantri.add(btnBatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 580, 70, 50));
 
         btnReset.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnReset.setForeground(new java.awt.Color(255, 255, 255));
-        btnReset.setText("Reset");
+        btnReset.setText("   Reset");
         btnReset.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnResetMouseClicked(evt);
             }
         });
-        InputSantri.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 640, 50, 40));
+        InputSantri.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 580, 80, 50));
 
         txtWali1.setBorder(null);
         txtWali1.addActionListener(new java.awt.event.ActionListener() {
@@ -448,41 +474,24 @@ public class SantriFrame extends javax.swing.JPanel {
                 txtWali1ActionPerformed(evt);
             }
         });
-        InputSantri.add(txtWali1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 210, 350, 29));
+        InputSantri.add(txtWali1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 159, 350, 20));
 
         buttonGroup1.add(Jrperempuan);
+        Jrperempuan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Jrperempuan.setText("Perempuan");
-        InputSantri.add(Jrperempuan, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 550, -1, -1));
+        InputSantri.add(Jrperempuan, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 500, -1, -1));
 
         buttonGroup1.add(JrLaki);
+        JrLaki.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         JrLaki.setText("Laki-laki");
-        InputSantri.add(JrLaki, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 550, -1, -1));
-        InputSantri.add(jTanggalMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 380, 360, 30));
-        InputSantri.add(jTanggalLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 300, 360, 30));
+        InputSantri.add(JrLaki, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 500, -1, -1));
+        InputSantri.add(jTanggalMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 310, 370, 40));
+        InputSantri.add(jTanggalLhir, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 230, 370, 40));
 
-        baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Input_Santri.png"))); // NOI18N
-        InputSantri.add(baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 710));
+        baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data Input Santri (2).png"))); // NOI18N
+        InputSantri.add(baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1070, 660));
 
-        javax.swing.GroupLayout MainPanelLayout = new javax.swing.GroupLayout(MainPanel);
-        MainPanel.setLayout(MainPanelLayout);
-        MainPanelLayout.setHorizontalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DataSantri, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(MainPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(InputSantri, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        MainPanelLayout.setVerticalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DataSantri, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
-            .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(MainPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(InputSantri, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
+        MainPanel.add(InputSantri, "card3");
 
         add(MainPanel, "card2");
     }// </editor-fold>//GEN-END:initComponents
@@ -522,19 +531,6 @@ public class SantriFrame extends javax.swing.JPanel {
     private void btnResetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnResetMouseClicked
         // TODO add your handling code here:
         reset();
-//        txtIdsantri.setText("");
-//        txtNamleng.setText("");
-//        //txt.setText("");
-//        txtNoHp.setText("");
-//        txtTempatLhir.setText("");
-//        txtAlamat.setText("");
-//        
-//        jTanggalLhir.setDate(null);
-//        jTanggalMasuk.setDate(null);
-//        
-//        buttonGroup1.clearSelection(); //radio button
-//        cbxStatus.setSelectedIndex(0);
-//        cbxKelas.setSelectedIndex(0); //reset kelas
     }//GEN-LAST:event_btnResetMouseClicked
 
     private void btnSimpanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSimpanMouseClicked
@@ -549,52 +545,46 @@ public class SantriFrame extends javax.swing.JPanel {
         str.setTanggal_lahir(sdf.format(jTanggalLhir.getDate()));
         str.setAlamat(txtAlamat.getText());
 
-//        // Gender
-        String gender = "";
+        // Gender
         if (JrLaki.isSelected()) {
-            gender = "Laki-Laki";
+            str.setJenis_kelamin("Laki-laki");
         } else if (Jrperempuan.isSelected()) {
-            gender = "Perempuan";
+            str.setJenis_kelamin("Perempuan");
         }
-        str.setJenis_kelamin(gender);
 
         str.setWali_santri(txtWali1.getText());
         str.setNo_hp(txtNoHp.getText());
         str.setTanggal_masuk(sdf.format(jTanggalMasuk.getDate())); 
 
-//        // ====== KONVERSI KELAS (FIX UTAMA) ======
+//        // ====== KONVERSI KELAS ======
         kls.setNama_kelas(cbxKelas.getSelectedItem().toString());
         ResultSet rs = kls.konversi();
 
-        if (rs != null && rs.next()) {
-            int id = rs.getInt("id_kelas"); 
-            str.setKelas_id(id);
+        if (rs.next()) {
+            str.setKelas_id(rs.getInt("id_kelas"));
         } else {
             JOptionPane.showMessageDialog(null, "Kelas tidak ditemukan!");
             return;
         }
-////
-////        // Status
-        if (cbxStatus.getSelectedItem().equals("Mukim")) {
-            str.setStatus(1);
-        } else {
-            str.setStatus(0); 
-        } 
-        } catch (SQLException sQLException) {
-            JOptionPane.showMessageDialog(null, "Erorrr : " + sQLException.getMessage());
-        } 
+
+        // Status
+        str.setStatus(cbxStatus.getSelectedItem().equals("Mukim") ? 1 : 0);
         
        // ================= INSERT / UPDATE =================
-        if (txtIdsantri.getText().trim().isEmpty()) {
-            str.setId_santri(0);
-            str.TambahSantri();   // INSERT
-            JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
+        if (txtIdsantri.getText().trim().isEmpty()) { 
+            str.TambahSantri();  // INSERT
+            JOptionPane.showMessageDialog(null, "Data berhasil ditambah");
         } else {
-            str.setId_santri(Integer.parseInt(txtIdsantri.getText()));
-            str.UbahSantri();     // UPDATE
+            str.setId_santri(Integer.parseInt(txtIdsantri.getText()));   
+            str.UbahSantri();   // UPDATE
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui");
         }
-  
+        
+    } catch (SQLException sQLException) {
+        JOptionPane.showMessageDialog(null, "Eror Simpan : " + sQLException.getMessage());
+    }
+ 
+    
     load_table();
     reset();
 
@@ -609,57 +599,57 @@ public class SantriFrame extends javax.swing.JPanel {
         // TODO add your handling code here:
         int row = tblSantri.getSelectedRow();
 
-    if (row == -1) {
-        JOptionPane.showMessageDialog(null, "Pilih dulu data di tabel!");
-        return;
-    }
-
-    // Ambil ID Santri yang dipilih
-    String idStr = tblSantri.getValueAt(row, 0).toString();
-    int id = Integer.parseInt(idStr);
-
-    try {
-        // Ambil data lengkap dari database
-        DataSantri str = new DataSantri();
-        ResultSet rs = str.DetailSantri(id);  // Anda pastikan method ini ada
-
-        if (rs.next()) {
-
-            // Isi form
-            txtIdsantri.setText(rs.getString("id_santri"));
-            txtNamleng.setText(rs.getString("nama_santri"));
-            txtTempatLhir.setText(rs.getString("tempat_lahir"));
-
-            // tanggal lahir
-            java.util.Date tglLahir = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("tanggal_lahir"));
-            jTanggalLhir.setDate(tglLahir);
-            txtAlamat.setText(rs.getString("alamat"));
-
-            String gender = rs.getString("jenis_kelamin");
-            if (gender.equals("Laki-Laki")) JrLaki.setSelected(true);
-            else Jrperempuan.setSelected(true);
-
-            txtWali1.setText(rs.getString("wali_santri"));
-            txtNoHp.setText(rs.getString("no_hp"));
-
-            // tanggal masuk
-            java.util.Date tglMasuk = new SimpleDateFormat("yyyy-MM-dd")
-                    .parse(rs.getString("tanggal_masuk"));
-            jTanggalMasuk.setDate(tglMasuk);
-
-            cbxKelas.setSelectedItem(rs.getString("nama_kelas"));
-            cbxStatus.setSelectedItem(rs.getInt("status") == 1 ? "Mukim" : "Tidak Mukim");
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih dulu data di tabel!");
+            return;
         }
 
-    } catch (SQLException | ParseException e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-    }
-        // Pastikan InputSantriFrame punya constructor (int id)
-        MainPanel.removeAll();
-        MainPanel.add(InputSantri);
-        MainPanel.repaint();
-        MainPanel.revalidate();   
-    
+        // Ambil ID Santri yang dipilih
+        String idStr = tblSantri.getValueAt(row, 0).toString();
+        int id = Integer.parseInt(idStr);
+
+        try {
+            // Ambil data lengkap dari database
+            DataSantri str = new DataSantri();
+            ResultSet rs = str.DetailSantri(id);  // Anda pastikan method ini ada
+
+            if (rs.next()) {
+
+                // Isi form
+                txtIdsantri.setText(rs.getString("id_santri"));
+                txtNamleng.setText(rs.getString("nama_santri"));
+                txtTempatLhir.setText(rs.getString("tempat_lahir"));
+                txtAlamat.setText(rs.getString("alamat"));
+                txtWali1.setText(rs.getString("wali_santri"));
+                txtNoHp.setText(rs.getString("no_hp"));
+
+                // tanggal lahir
+                java.util.Date tglLahir = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("tanggal_lahir"));
+                jTanggalLhir.setDate(tglLahir);
+
+                // tanggal masuk
+                java.util.Date tglMasuk = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("tanggal_masuk"));
+                jTanggalMasuk.setDate(tglMasuk);
+
+                // Jenis Kelamin
+                String gender = rs.getString("jenis_kelamin");
+                if (gender.equals("Laki-laki")) JrLaki.setSelected(true);
+                else Jrperempuan.setSelected(true);
+
+                // ComboBox
+                cbxKelas.setSelectedItem(rs.getString("nama_kelas"));
+                cbxStatus.setSelectedItem(rs.getInt("status") == 1 ? "Mukim" : "Tidak Mukim");
+            }
+
+        } catch (SQLException | ParseException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+            // Pastikan InputSantriFrame punya constructor (int id)
+            MainPanel.removeAll();
+            MainPanel.add(InputSantri);
+            MainPanel.repaint();
+            MainPanel.revalidate();   
+
     }//GEN-LAST:event_btnUbahMouseClicked
 
     private void btnTambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTambahMouseClicked
@@ -708,7 +698,7 @@ public class SantriFrame extends javax.swing.JPanel {
             jTanggalLhir.setDate(java.sql.Date.valueOf(tglLahir));
             jTanggalMasuk.setDate(java.sql.Date.valueOf(tglMasuk));
             txtAlamat.setText(alamat);            
-            JrLaki.setSelected(gender.equals("Laki-Laki"));
+            JrLaki.setSelected(gender.equals("Laki-laki"));
             Jrperempuan.setSelected(gender.equals("Perempuan"));
             txtWali1.setText(wali);
             txtNoHp.setText(NoHp);
@@ -717,6 +707,16 @@ public class SantriFrame extends javax.swing.JPanel {
         
     }                        
     }//GEN-LAST:event_tblSantriMouseClicked
+
+    private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
+        // TODO add your handling code here:
+        String key = txtSearch.getText();
+        pencarian(key);
+    }//GEN-LAST:event_txtSearchKeyTyped
+
+    private void cbxStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxStatusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -737,7 +737,6 @@ public class SantriFrame extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cbxKelas;
     private javax.swing.JComboBox<String> cbxStatus;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;

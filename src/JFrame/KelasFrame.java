@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import kelas.DataKelas;
-import kelas.Koneksi;
+import kelas.DataPengajar;
 
 /**
  *
@@ -17,84 +18,95 @@ import kelas.Koneksi;
  */
 public class KelasFrame extends javax.swing.JPanel {
 
-    private DefaultTableModel model;
-    private DataKelas kls = new DataKelas();
-
     public KelasFrame() {
         initComponents();
         loadTable();      // Munculkan data saat pertama kali buka
-        loadWaliKelas();  // Isi ComboBox dengan nama Ustadz
-        resetForm();      // Bersihkan field
+        CBWaliKelas();  // Isi ComboBox dengan nama Ustadz
+        resetForm();     // Bersihkan field
+        autoId();       // Otomatis Menampilkan ID 
     }
 
-    // --- LOGIKA SISTEM ---
-
-    private void loadTable() {
-        model = new DefaultTableModel();
+    void loadTable() {
+    DefaultTableModel model = new DefaultTableModel();
         model.addColumn("ID Kelas");
         model.addColumn("Nama Kelas");
-        model.addColumn("Tingkat");
-        model.addColumn("Wali Ustadz");
+        model.addColumn("Wali Kelas");
 
         try {
+            DataKelas kls = new DataKelas();
             ResultSet rs = kls.tampilKelas();
             while (rs.next()) {
                 model.addRow(new Object[]{
-                    rs.getString("id_kelas"),
+                    rs.getInt("id_kelas"),
                     rs.getString("nama_kelas"),
-                    rs.getString("tingkat_pendidikan"),
                     rs.getString("nama_ustadz")
                 });
             }
-            jTable1.setModel(model);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal memuat data: " + e.getMessage());
+            tblKelas.setModel(model);
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(this, "Eror Tabel : " + sQLException.getMessage());
         }
     }
+    
+    private void pencarian(String key) {
+    DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID Kelas");
+        model.addColumn("Nama Kelas");
+        model.addColumn("Wali Kelas");
 
-    private void loadWaliKelas() {
     try {
-        // Membersihkan item lama agar tidak duplikat saat dipanggil ulang
-        CBWaliKelas.removeAllItems();
-        CBWaliKelas.addItem("- Pilih Wali Kelas -"); // Item default (index 0)
+        DataKelas kls = new DataKelas();
+        ResultSet result = kls.cariKelas(key);
 
-        Koneksi kon = new Koneksi();
-        java.sql.Connection conn = kon.configDB();
-        java.sql.Statement st = conn.createStatement();
-        
-        // Ambil data dari tabel ustadz
-        ResultSet rs = st.executeQuery("SELECT nama_ustadz FROM ustadz ORDER BY nama_ustadz ASC");
-        
-        while (rs.next()) {
-            CBWaliKelas.addItem(rs.getString("nama_ustadz"));
+        while (result.next()) {
+            model.addRow(new Object[]{
+                result.getInt("id_kelas"),
+                result.getString("nama_kelas"),
+                result.getString("nama_ustadz")
+            });
         }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Gagal memuat daftar ustadz: " + e.getMessage());
+
+        tblKelas.setModel(model);
+    } catch (SQLException sQLException) {
+        JOptionPane.showMessageDialog(null, "Error saat mencari : " + sQLException.getMessage());
     }
+    }
+    
+    void CBWaliKelas() {
+        if (CBWaliKelas == null) return;
+            // Membersihkan item lama agar tidak duplikat saat dipanggil ulang
+        CBWaliKelas.removeAllItems();
+        CBWaliKelas.addItem("- Pilih Wali Kelas -"); // Item default (index 0)  
+
+        DataPengajar pjr = new DataPengajar();
+        try (ResultSet rs = pjr.dataComboBox()) {
+            while (rs.next()) {
+                CBWaliKelas.addItem(rs.getString("nama_ustadz"));   
+            }
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Eror CBPengajar : " + sQLException.getMessage());
+        }       
 }
 
-    private void resetForm() {
+    void resetForm() {
         tID.setText("");
         tNamaLengkap.setText("");
         CBWaliKelas.setSelectedIndex(0);
         tCari.setText("");
     }
     
-    private int getSelectedUstadzId(String nama) {
-        int id = 0;
+    void autoId() {
         try {
-            Koneksi kon = new Koneksi();
-            java.sql.Connection conn = kon.configDB();
-            java.sql.PreparedStatement ps = conn.prepareStatement("SELECT id_ustadz FROM ustadz WHERE nama_ustadz = ?");
-            ps.setString(1, nama);
-            ResultSet rs = ps.executeQuery();
+            DataKelas kls = new DataKelas();
+            ResultSet rs = kls.autoId();
+            
             if (rs.next()) {
-                id = rs.getInt("id_ustadz");
+                int id = rs.getInt("ID") + 1;
+                tID.setText(String.valueOf(id));
             }
-        } catch (SQLException e) {
-            System.err.println("Error get ID: " + e.getMessage());
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "AutoID Eror : " + sQLException.getMessage());
         }
-        return id;
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -105,98 +117,99 @@ public class KelasFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainpanel = new javax.swing.JPanel();
-        panelkelas = new javax.swing.JPanel();
         tID = new javax.swing.JTextField();
         tNamaLengkap = new javax.swing.JTextField();
-        BSimpan = new javax.swing.JButton();
+        btnTambah = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         tCari = new javax.swing.JTextField();
-        bHapus = new javax.swing.JButton();
-        bUbah = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
         CBWaliKelas = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblKelas = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        bground = new javax.swing.JLabel();
+        btnUbah = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
-        panelkelas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tID.setBorder(null);
-        panelkelas.add(tID, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 350, 20));
+        add(tID, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, 350, 20));
 
         tNamaLengkap.setBorder(null);
-        panelkelas.add(tNamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 350, 20));
-
-        BSimpan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        BSimpan.setForeground(new java.awt.Color(255, 255, 255));
-        BSimpan.setText("SIMPAN");
-        BSimpan.setBorder(null);
-        BSimpan.setBorderPainted(false);
-        BSimpan.setContentAreaFilled(false);
-        BSimpan.addActionListener(new java.awt.event.ActionListener() {
+        tNamaLengkap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BSimpanActionPerformed(evt);
+                tNamaLengkapActionPerformed(evt);
             }
         });
-        panelkelas.add(BSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 80, 30));
+        add(tNamaLengkap, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 280, 350, 20));
 
-        jLabel1.setText("ID Kelas");
-        panelkelas.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, -1, -1));
+        btnTambah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnTambah.setForeground(new java.awt.Color(255, 255, 255));
+        btnTambah.setText("TAMBAH");
+        btnTambah.setBorder(null);
+        btnTambah.setBorderPainted(false);
+        btnTambah.setContentAreaFilled(false);
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
+        add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 420, 90, 40));
 
-        jLabel3.setText("Wali Kelas");
-        panelkelas.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 330, -1, -1));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setText(" ID Kelas");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, -1, 30));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText(" Wali Kelas");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, -1, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel4.setText("DATA KELAS");
-        panelkelas.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 390, 90));
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 390, 90));
 
         tCari.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tCari.setBorder(null);
-        tCari.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tCariActionPerformed(evt);
+        tCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tCariKeyTyped(evt);
             }
         });
-        panelkelas.add(tCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 280, 30));
+        add(tCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 280, 30));
 
-        bHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bHapus.setForeground(new java.awt.Color(255, 255, 255));
-        bHapus.setText("HAPUS");
-        bHapus.setBorder(null);
-        bHapus.setBorderPainted(false);
-        bHapus.setContentAreaFilled(false);
-        bHapus.addActionListener(new java.awt.event.ActionListener() {
+        btnHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        btnHapus.setText("HAPUS");
+        btnHapus.setBorder(null);
+        btnHapus.setBorderPainted(false);
+        btnHapus.setContentAreaFilled(false);
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bHapusActionPerformed(evt);
+                btnHapusActionPerformed(evt);
             }
         });
-        panelkelas.add(bHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 80, 30));
+        add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 420, 80, 40));
 
-        bUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bUbah.setForeground(new java.awt.Color(255, 255, 255));
-        bUbah.setText("UBAH");
-        bUbah.setBorder(null);
-        bUbah.setBorderPainted(false);
-        bUbah.setContentAreaFilled(false);
-        bUbah.addActionListener(new java.awt.event.ActionListener() {
+        btnReset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnReset.setForeground(new java.awt.Color(255, 255, 255));
+        btnReset.setText("RESET");
+        btnReset.setBorder(null);
+        btnReset.setBorderPainted(false);
+        btnReset.setContentAreaFilled(false);
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bUbahActionPerformed(evt);
+                btnResetActionPerformed(evt);
             }
         });
-        panelkelas.add(bUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 420, 90, 30));
+        add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 420, 90, 40));
 
         CBWaliKelas.setBorder(null);
-        CBWaliKelas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CBWaliKelasActionPerformed(evt);
-            }
-        });
-        panelkelas.add(CBWaliKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 350, -1));
+        add(CBWaliKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 360, 350, -1));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblKelas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -207,143 +220,142 @@ public class KelasFrame extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblKelas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tblKelasMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblKelas);
 
-        panelkelas.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 140, -1, 430));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 140, -1, 430));
 
-        jLabel5.setText("Nama Kelas");
-        panelkelas.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, -1, -1));
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText(" Nama Kelas");
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, -1, 30));
 
-        bground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/datakelas.jpg"))); // NOI18N
-        panelkelas.add(bground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        btnUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUbah.setForeground(new java.awt.Color(255, 255, 255));
+        btnUbah.setText("UBAH");
+        btnUbah.setBorder(null);
+        btnUbah.setBorderPainted(false);
+        btnUbah.setContentAreaFilled(false);
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
+        add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 420, 90, 40));
 
-        javax.swing.GroupLayout mainpanelLayout = new javax.swing.GroupLayout(mainpanel);
-        mainpanel.setLayout(mainpanelLayout);
-        mainpanelLayout.setHorizontalGroup(
-            mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelkelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        mainpanelLayout.setVerticalGroup(
-            mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelkelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainpanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data Kelas.png"))); // NOI18N
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 720));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCariActionPerformed
+    private void tNamaLengkapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNamaLengkapActionPerformed
         // TODO add your handling code here:
-        model.setRowCount(0);
+    }//GEN-LAST:event_tNamaLengkapActionPerformed
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        DataKelas kls = new DataKelas();
+        DataPengajar pjr = new DataPengajar();
+        
         try {
-            ResultSet rs = kls.cariKelas(tCari.getText());
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)
-                });
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
+        kls.setId_kelas(Integer.parseInt(tID.getText()));
+        kls.setNama_kelas(tNamaLengkap.getText());
+        
+        // CB Pengajar/ustadz
+        pjr.setNama_ustadz(CBWaliKelas.getSelectedItem().toString());
+        ResultSet rst = pjr.konversi();
+        if (rst.next()) {
+            kls.setWali_ustadz_id(rst.getInt("id_ustadz"));
         }
-    }//GEN-LAST:event_tCariActionPerformed
 
-    private void CBWaliKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBWaliKelasActionPerformed
+        } catch (NumberFormatException | SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "BtnTambah Eror : " + sQLException.getMessage());
+        }
+       
+        kls.ubahDataKelas();
+        resetForm();
+        loadTable();
+    }//GEN-LAST:event_btnUbahActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_CBWaliKelasActionPerformed
+        DataKelas kls = new DataKelas();
+        DataPengajar pjr = new DataPengajar();
+        
+        try {
+//        kls.setId_kelas(Integer.parseInt(tID.getText()));
+        kls.setNama_kelas(tNamaLengkap.getText());
+        
+        // CB Pengajar/ustadz
+        pjr.setNama_ustadz(CBWaliKelas.getSelectedItem().toString());
+        ResultSet rst = pjr.konversi();
+        if (rst.next()) {
+            kls.setWali_ustadz_id(rst.getInt("id_ustadz"));
+        }
 
-    private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
+        } catch (NumberFormatException | SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "BtnTambah Eror : " + sQLException.getMessage());
+        }
+       
+        kls.tambahDataKelas();
+        resetForm();
+        loadTable();
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
-        int row = jTable1.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus!");
-        } else {
-            int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                kls.setId_kelas(Integer.parseInt(jTable1.getValueAt(row, 0).toString()));
-                kls.hapusDataKelas();
-                loadTable();
-                resetForm();
-            }
-        }
-    }//GEN-LAST:event_bHapusActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btnResetActionPerformed
 
-    private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
-        int row = jTable1.getSelectedRow();
-        String selectedWali = CBWaliKelas.getSelectedItem().toString();
+        DataKelas kls = new DataKelas();
+        kls.setId_kelas(Integer.parseInt(tID.getText()));
+        
+        kls.hapusDataKelas();
+        resetForm();
+        loadTable();
+    }//GEN-LAST:event_btnHapusActionPerformed
 
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data di tabel yang ingin diubah!");
-        } else if (tID.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
-            JOptionPane.showMessageDialog(this, "Lengkapi data sebelum mengubah!");
-        } else {
-            kls.setId_kelas(Integer.parseInt(jTable1.getValueAt(row, 0).toString()));
-            kls.setNama_kelas(tID.getText());
-            kls.setWali_ustadz_id(getSelectedUstadzId(selectedWali));
-
-            kls.ubahDataKelas();
-            loadTable();
-            resetForm();
-        }
-    }//GEN-LAST:event_bUbahActionPerformed
-
-    private void BSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BSimpanActionPerformed
-                                       
-   String selectedWali = CBWaliKelas.getSelectedItem().toString();
-
-        if (tID.getText().isEmpty() || selectedWali.equals("- Pilih Wali Kelas -")) {
-            JOptionPane.showMessageDialog(this, "Lengkapi data dan pilih Wali Kelas!");
-        } else {
-            kls.setNama_kelas(tID.getText());
-            kls.setTingkat_pendidikan(tNamaLengkap.getText());
-            kls.setWali_ustadz_id(getSelectedUstadzId(selectedWali));
-
-            kls.tambahDataKelas();
-            loadTable();
-            resetForm();
-        }
-    }//GEN-LAST:event_BSimpanActionPerformed
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void tblKelasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKelasMouseClicked
         // TODO add your handling code here:
-        int row = jTable1.getSelectedRow();
-        if (row != -1) {
-            tID.setText(jTable1.getValueAt(row, 1).toString());
-            tNamaLengkap.setText(jTable1.getValueAt(row, 2).toString());
-            CBWaliKelas.setSelectedItem(jTable1.getValueAt(row, 3).toString());
+        int baris = tblKelas.getSelectedRow();
+        if (baris != -1){
+            String id              = tblKelas.getValueAt(baris, 0).toString();
+            String nama            = tblKelas.getValueAt(baris, 1).toString();
+            String Wali            = tblKelas.getValueAt(baris, 2).toString();
+
+            tID.setText(id);
+            tNamaLengkap.setText(nama);
+            CBWaliKelas.setSelectedItem(Wali);
         }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tblKelasMouseClicked
+
+    private void tCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyTyped
+        // TODO add your handling code here:
+        String key = tCari.getText();
+        pencarian(key);
+    }//GEN-LAST:event_tCariKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BSimpan;
     private javax.swing.JComboBox<String> CBWaliKelas;
-    private javax.swing.JButton bHapus;
-    private javax.swing.JButton bUbah;
-    private javax.swing.JLabel bground;
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnReset;
+    private javax.swing.JButton btnTambah;
+    private javax.swing.JButton btnUbah;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JPanel mainpanel;
-    private javax.swing.JPanel panelkelas;
     private javax.swing.JTextField tCari;
     private javax.swing.JTextField tID;
     private javax.swing.JTextField tNamaLengkap;
+    private javax.swing.JTable tblKelas;
     // End of variables declaration//GEN-END:variables
 }

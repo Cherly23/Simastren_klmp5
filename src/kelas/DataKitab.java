@@ -19,11 +19,8 @@ public class DataKitab extends Koneksi{
     private ResultSet rsVar;
     private String query;
     
-    private int id_kitab;
+    private int id_kitab, ustadz_id, kelas_id;
     private String nama_kitab;
-    private int ustadz_id; 
-    private int kelas_id;
-    private String kategori_kitab;
     
     public DataKitab(){
         Koneksi = super.configDB();
@@ -60,19 +57,10 @@ public class DataKitab extends Koneksi{
     public void setKelas_id(int kelas_id) {
         this.kelas_id = kelas_id;
     }
-
-    public String getKategori_kitab() {
-        return kategori_kitab;
-    }
-
-    public void setKategori_kitab(String kategori_kitab) {
-        this.kategori_kitab = kategori_kitab;
-    }
-    
     
     public ResultSet loadData() {
         try {
-            query = "SELECT k.id_kitab, k.nama_kitab, u.nama_ustadz, l.nama_kelas, k.kategori_kitab " +
+            query = "SELECT k.id_kitab, k.nama_kitab, u.nama_ustadz, l.nama_kelas " +
                     "FROM kitab k JOIN kelas l ON k.kelas_id = l.id_kelas " +
                     "JOIN ustadz u ON k.ustadz_id = u.id_ustadz";
             
@@ -86,14 +74,14 @@ public class DataKitab extends Koneksi{
     }
     public void saveData() {
         try {
-            query = "INSERT INTO kitab (nama_kitab, ustadz_id, kelas_id, kategori_kitab) VALUES (?,?,?,?)";
+            query = "INSERT INTO kitab (nama_kitab, ustadz_id, kelas_id) VALUES (?,?,?)";
             
             psVar = Koneksi.prepareStatement(query);
             psVar.setString(1, nama_kitab);
             psVar.setInt(2, ustadz_id);
             psVar.setInt(3, kelas_id);
-            psVar.setString(4, kategori_kitab);
             psVar.executeUpdate();
+            psVar.close();
             
             JOptionPane.showMessageDialog(null, "Data Kitab berhasil ditambahkan");
             
@@ -103,14 +91,13 @@ public class DataKitab extends Koneksi{
     }
     public void updateData() {
         try {
-            query = "UPDATE kitab SET nama_kitab = ?, ustadz_id = ?, kelas_id = ?, kategori_kitab = ? WHERE id_kitab = ?";
+            query = "UPDATE kitab SET nama_kitab = ?, ustadz_id = ?, kelas_id = ? WHERE id_kitab = ?";
             
             psVar = Koneksi.prepareStatement(query);
             psVar.setString(1, nama_kitab);
             psVar.setInt(2, ustadz_id); 
             psVar.setInt(3, kelas_id); // PERBAIKAN: kelas_id harusnya di indeks 3
-            psVar.setString(4, kategori_kitab); // PERBAIKAN: kategori_kitab harusnya di indeks 4
-            psVar.setInt(5, id_kitab); // ID Kitab untuk klausa WHERE
+            psVar.setInt(4, id_kitab); // ID Kitab untuk klausa WHERE
             
             psVar.executeUpdate();
             
@@ -136,6 +123,33 @@ public class DataKitab extends Koneksi{
         }
     }
     
+    public ResultSet cariKitab(String key){
+    query = "SELECT k.id_kitab, k.nama_kitab, u.nama_ustadz, kl.nama_kelas "
+            + "FROM kitab k "
+            + "LEFT JOIN ustadz u ON k.ustadz_id = u.id_ustadz "
+            + "LEFT JOIN kelas kl ON k.kelas_id = kl.id_kelas "
+            + "WHERE k.nama_kitab LIKE ? "
+            + "OR u.nama_ustadz LIKE ? "
+            + "OR kl.nama_kelas LIKE ? "
+            + "OR k.kategori_kitab LIKE ? ";
+        
+        try { 
+            PreparedStatement ps = Koneksi.prepareStatement(query);
+            key = "%" + key + "%";
+            
+            ps.setString(1, key); // id kitab
+            ps.setString(2, key); // nama kitab
+            ps.setString(3, key); // nama ustadz
+            ps.setString(4, key); // nama kelas
+            
+            
+            return rsVar = ps.executeQuery();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,"Gagal mencari data ustadz: " + e.getMessage());
+        }
+        return rsVar;
+    }
     
     public ResultSet dataComboBoxKelas(){
         try {
@@ -148,41 +162,41 @@ public class DataKitab extends Koneksi{
         return rsVar;
     }
     
-    public ResultSet dataComboBoxUstadz(){
-        try {
-            query = "SELECT nama_ustadz FROM ustadz ORDER BY nama_ustadz ASC";
-            stVar = Koneksi.createStatement();
-            rsVar = stVar.executeQuery(query);
-        } catch (SQLException sQLException) {
-            JOptionPane.showMessageDialog(null, "Error memuat ComboBox Ustadz: " + sQLException.getMessage());
-        }
-        return rsVar;
-    }
-    
-    public ResultSet konversiKelasId(String namaKelas) {
-        try {
-            query = "SELECT id_kelas FROM kelas WHERE nama_kelas = ?";
-            // PERBAIKAN: Menggunakan Koneksi (K besar)
-            psVar = Koneksi.prepareStatement(query);
-            psVar.setString(1, namaKelas);
-            rsVar = psVar.executeQuery();
-        } catch (SQLException sQLException) {
-            JOptionPane.showMessageDialog(null, "Error konversi ID Kelas: " + sQLException.getMessage()); // Pesan error diperbaiki
-        }
-        return rsVar;
-    }
-    
-    public ResultSet konversiUstadzId(String namaUstadz) {
-        try {
-            query = "SELECT id_ustadz FROM ustadz WHERE nama_ustadz = ?";
-            psVar = Koneksi.prepareStatement(query);
-            psVar.setString(1, namaUstadz);
-            rsVar = psVar.executeQuery();
-        } catch (SQLException sQLException) {
-            JOptionPane.showMessageDialog(null, "Error konversi ID Ustadz: " + sQLException.getMessage());
-        }
-        return rsVar;
-    }
+//    public ResultSet dataComboBoxUstadz(){
+//        try {
+//            query = "SELECT nama_ustadz FROM ustadz ORDER BY nama_ustadz ASC";
+//            stVar = Koneksi.createStatement();
+//            rsVar = stVar.executeQuery(query);
+//        } catch (SQLException sQLException) {
+//            JOptionPane.showMessageDialog(null, "Error memuat ComboBox Ustadz: " + sQLException.getMessage());
+//        }
+//        return rsVar;
+//    }
+//    
+//    public ResultSet konversiKelasId(String namaKelas) {
+//        try {
+//            query = "SELECT id_kelas FROM kelas WHERE nama_kelas = ?";
+//            // PERBAIKAN: Menggunakan Koneksi (K besar)
+//            psVar = Koneksi.prepareStatement(query);
+//            psVar.setString(1, namaKelas);
+//            rsVar = psVar.executeQuery();
+//        } catch (SQLException sQLException) {
+//            JOptionPane.showMessageDialog(null, "Error konversi ID Kelas: " + sQLException.getMessage()); // Pesan error diperbaiki
+//        }
+//        return rsVar;
+//    }
+//    
+//    public ResultSet konversiUstadzId(String namaUstadz) {
+//        try {
+//            query = "SELECT id_ustadz FROM ustadz WHERE nama_ustadz = ?";
+//            psVar = Koneksi.prepareStatement(query);
+//            psVar.setString(1, namaUstadz);
+//            rsVar = psVar.executeQuery();
+//        } catch (SQLException sQLException) {
+//            JOptionPane.showMessageDialog(null, "Error konversi ID Ustadz: " + sQLException.getMessage());
+//        }
+//        return rsVar;
+//    }
     
     public ResultSet autoID() {
         try {

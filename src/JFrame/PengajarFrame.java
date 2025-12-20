@@ -3,12 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package JFrame;
-import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import kelas.DataPengajar;
 import java.sql.SQLException;
-import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 /**
  *
@@ -22,32 +20,61 @@ public class PengajarFrame extends javax.swing.JPanel {
 
     public PengajarFrame() {
         initComponents();
-        
-        buttonGroup1 = new ButtonGroup();
-        buttonGroup1.add(radioButtonLK1);
-        buttonGroup1.add(radioButtonPR);
-        
         load_table();
-        tblUstadz.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblUstadzMouseClicked(evt);
-            }
-        });
-        
+        reset();
         autoIdUstadz();
-                
+        
+//        
+//        buttonGroup1 = new ButtonGroup();
+//        buttonGroup1.add(radioButtonLK1);
+//        buttonGroup1.add(radioButtonPR);
+//        
+//        load_table();
+//        tblUstadz.addMouseListener(new java.awt.event.MouseAdapter() {
+//            public void mouseClicked(java.awt.event.MouseEvent evt) {
+//                tblUstadzMouseClicked(evt);
+//            }
+//        });
+//        
+//        autoIdUstadz();
+//                
     }
+    
+    private void pencarian(String key) {
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("ID Pengajar");
+    model.addColumn("Nama Lengkap");
+    model.addColumn("Alamat");
+    model.addColumn("No HP");
+    model.addColumn("Gender");
+
+    try {
+        DataPengajar pjr = new DataPengajar();
+        ResultSet result = pjr.cariUstadz(key);
+
+        while (result.next()) {
+            model.addRow(new Object[]{
+                result.getInt("id_ustadz"),
+                result.getString("nama_ustadz"),
+                result.getString("alamat"),
+                result.getString("no_hp"),
+                result.getString("jenis_kelamin"),
+            });
+        }
+
+        tblUstadz.setModel(model);
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error saat mencari : " + e.getMessage());
+    }
+}
     
     void reset() {
         tidPengajar.setText("");
-        tidPengajar.setText("");
+        talamat.setText("");
         tnamaLengkap.setText("");
         tnoHP.setText("");
-        
         buttonGroup1.clearSelection();
-        
-        autoIdUstadz();
-        load_table();
+
     }
     
     void autoIdUstadz(){
@@ -83,7 +110,8 @@ public class PengajarFrame extends javax.swing.JPanel {
             }
         }
     }
-    public void load_data_pengajar(String key){
+    
+     void load_table(){
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("ID");
         model.addColumn("Nama Lengkap");
@@ -122,9 +150,9 @@ public class PengajarFrame extends javax.swing.JPanel {
             
         }
     }
-    public void load_table(){
-        load_data_pengajar(null);
-    }
+//    public void load_table(){
+//        load_data_pengajar(null);
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -163,6 +191,11 @@ public class PengajarFrame extends javax.swing.JPanel {
         tCari.setActionCommand("<Not Set>");
         tCari.setBorder(null);
         tCari.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        tCari.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tCariMouseClicked(evt);
+            }
+        });
         tCari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tCariActionPerformed(evt);
@@ -172,10 +205,14 @@ public class PengajarFrame extends javax.swing.JPanel {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 tCariKeyReleased(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tCariKeyTyped(evt);
+            }
         });
         add(tCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 60, 300, -1));
 
         tidPengajar.setBorder(null);
+        tidPengajar.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         tidPengajar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tidPengajarActionPerformed(evt);
@@ -344,13 +381,13 @@ public class PengajarFrame extends javax.swing.JPanel {
         });
         add(radioButtonLK1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 506, -1, -1));
 
-        Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JFrame/Data_Pengajar_Mentahan_1.png"))); // NOI18N
-        add(Background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 710));
+        Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Pengajar_Mentahan_1.png"))); // NOI18N
+        add(Background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 710));
     }// </editor-fold>//GEN-END:initComponents
 
     private void tCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCariActionPerformed
         // TODO add your handling code here:
-        load_data_pengajar(tCari.getText());
+//        load_data_pengajar(tCari.getText());
     }//GEN-LAST:event_tCariActionPerformed
 
     private void tnamaLengkapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnamaLengkapActionPerformed
@@ -366,25 +403,19 @@ public class PengajarFrame extends javax.swing.JPanel {
         // TODO add your handling code here:
         int baris = tblUstadz.getSelectedRow();
         if (baris != -1){
-            DefaultTableModel model = (DefaultTableModel) tblUstadz.getModel();
-            String id = model.getValueAt(baris, 0).toString();
-            String nama = model.getValueAt(baris, 1).toString();
-            String alamat = model.getValueAt(baris, 2).toString();
-            String noHp = model.getValueAt(baris, 3).toString();
-            String jenisKelamin = model.getValueAt(baris, 4).toString();
+            String id               = tblUstadz.getValueAt(baris, 0).toString();
+            String nama             = tblUstadz.getValueAt(baris, 1).toString();
+            String alamat           = tblUstadz.getValueAt(baris, 2).toString();
+            String noHp             = tblUstadz.getValueAt(baris, 3).toString();
+            String jenisKelamin     = tblUstadz.getValueAt(baris, 4).toString();
 
-            tidPengajar.setEditable(true);
+//            tidPengajar.setEditable(true);
             tidPengajar.setText(id);
             tnamaLengkap.setText(nama);
             talamat.setText(alamat);
             tnoHP.setText(noHp);
-
-            buttonGroup1.clearSelection();
-            if (jenisKelamin.equalsIgnoreCase("Laki-laki")){
-                radioButtonLK1.setSelected(true);
-            }else if (jenisKelamin.equalsIgnoreCase("Perempuan")) {
-                radioButtonPR.setSelected(true);
-            }
+            radioButtonLK1.setSelected(jenisKelamin.equals("Laki-laki"));
+            radioButtonPR.setSelected(jenisKelamin.equals("Perempuan"));
         }
     }//GEN-LAST:event_tblUstadzMouseClicked
 
@@ -479,12 +510,23 @@ public class PengajarFrame extends javax.swing.JPanel {
 
     private void tCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyReleased
         // TODO add your handling code here:
-        load_data_pengajar(tCari.getText());
+//        load_data_pengajar(tCari.getText());
     }//GEN-LAST:event_tCariKeyReleased
 
     private void tnoHPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnoHPActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tnoHPActionPerformed
+
+    private void tCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyTyped
+        // TODO add your handling code here:
+        String key = tCari.getText();
+        pencarian(key);
+    }//GEN-LAST:event_tCariKeyTyped
+
+    private void tCariMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tCariMouseClicked
+        // TODO add your handling code here:
+//        tCari.setText("");
+    }//GEN-LAST:event_tCariMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

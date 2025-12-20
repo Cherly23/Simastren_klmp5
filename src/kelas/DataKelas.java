@@ -60,9 +60,9 @@ public class DataKelas extends Koneksi {
             ps.setString(1, nama_kelas);
             ps.setInt(2, wali_ustadz_id);
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Gagal Simpan: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Data Berhasil DiTambah");
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Gagal Tambah : " + sQLException.getMessage());
         }
     }
 
@@ -75,8 +75,8 @@ public class DataKelas extends Koneksi {
             ps.setInt(3, id_kelas);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Berhasil Diperbarui");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Gagal Ubah: " + e.getMessage());
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Gagal Ubah: " + sQLException.getMessage());
         }
     }
 
@@ -87,8 +87,8 @@ public class DataKelas extends Koneksi {
             ps.setInt(1, id_kelas);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Gagal Hapus: " + e.getMessage());
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Gagal Hapus: " + sQLException.getMessage());
         }
     }
 
@@ -99,18 +99,24 @@ public class DataKelas extends Koneksi {
         try {
             st = koneksi.createStatement();
             rs = st.executeQuery(query);
-        } catch (SQLException e) {
-            System.err.println("Gagal Tampil: " + e.getMessage());
+        } catch (SQLException sQLException) {
+            System.err.println("Gagal Tampil: " + sQLException.getMessage());
         }
         return rs;
     }
 
     public ResultSet cariKelas(String cari) {
-        query = "SELECT * FROM kelas WHERE nama_kelas LIKE ?";
+    query = "SELECT k.*, u.nama_ustadz "
+            + "FROM kelas k "
+            + "LEFT JOIN ustadz u ON k.wali_ustadz_id = u.id_ustadz "
+            + "WHERE k.nama_kelas LIKE ? "
+            + "OR u.nama_ustadz LIKE ?";
+
         try {
             ps = koneksi.prepareStatement(query);
             ps.setString(1, "%" + cari + "%");
             ps.setString(2, "%" + cari + "%");
+//            ps.setString(3, "%" + cari + "%");
             rs = ps.executeQuery();
         } catch (SQLException e) {
             System.err.println("Gagal Cari: " + e.getMessage());
@@ -118,19 +124,15 @@ public class DataKelas extends Koneksi {
         return rs;
     }
 
-    public int autoId() {
-        int idBaru = 1;
-        query = "SELECT MAX(id_kelas) AS max_id FROM kelas";
+    public ResultSet autoId() {
+        query = "SELECT id_kelas AS ID FROM kelas ORDER BY id_kelas DESC LIMIT 1";
         try {
             st = koneksi.createStatement();
             rs = st.executeQuery(query);
-            if (rs.next()) {
-                idBaru = rs.getInt("max_id") + 1;
-            }
-        } catch (SQLException e) {
-            System.err.println("Auto ID Error: " + e.getMessage());
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Auto ID Error: " + sQLException.getMessage());
         }
-        return idBaru;
+        return rs;
     }
     
     public ResultSet dataComboBox() {
