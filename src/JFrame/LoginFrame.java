@@ -60,15 +60,16 @@ public class LoginFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        // TODO add your handling code here:
+        // mengambil inputan pengguna
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
 
+        // cek apakah inputan dari user "admin" dan "123"
         if ("admin".equals(username) && "123".equals(password)) {
             JOptionPane.showMessageDialog(null, "Login Berhasil!");
             new DashboardFrame().setVisible(true);
-            this.dispose();
-        } else {
+            dispose(); // menutup frame login
+        } else { 
             JOptionPane.showMessageDialog(null, "Username atau Password Salah!", "EROR", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jLabel1MouseClicked

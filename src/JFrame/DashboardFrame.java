@@ -4,13 +4,13 @@
  */
 package JFrame;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.event.ActionEvent;        // 
+import java.awt.event.ActionListener;     // untuk tombol
+import java.util.ArrayList;               // bisa menyimpan banyak data sekaligus dan bisa membesar sendiri jika datanya bertambah banyak.
+import javax.swing.ImageIcon;             // memanggil dan memasang gambar 
+import javax.swing.JOptionPane;           // Menampilkan pesan
+import javax.swing.UIManager;             // mengatur tema besar aplikasi agar semua tombol dan kotak input terlihat seragam.
+import com.formdev.flatlaf.FlatLightLaf;  // mengubah tampilan aplikasi Java yang biasanya kaku/jadul menjadi terlihat modern, bersih, dan kekinian (gaya Flat Design).
 import jFrame.PengurusFrame;
 
 /**
@@ -21,11 +21,12 @@ public class DashboardFrame extends javax.swing.JFrame {
 
     public DashboardFrame() {
         initComponents();
-        this.setExtendedState(MAXIMIZED_BOTH);
-        execute();
+        this.setExtendedState(MAXIMIZED_BOTH); // apk full screen
+        execute();  // memanggil fungsi untuk mengisi menubar
     }
     
     private void execute() {
+        // Memanggil gambar dari folder image untuk dijadikan icon
         ImageIcon iconHome          = new ImageIcon(getClass().getResource("/Image/iconHome.png"));
         ImageIcon iconDashboard     = new ImageIcon(getClass().getResource("/Image/iconDashboard.png"));
         ImageIcon iconAkademik      = new ImageIcon(getClass().getResource("/Image/iconAkademik.png"));
@@ -39,13 +40,15 @@ public class DashboardFrame extends javax.swing.JFrame {
         ImageIcon iconLogout        = new ImageIcon(getClass().getResource("/Image/iconLogout.png"));
         ImageIcon iconLogSantri     = new ImageIcon(getClass().getResource("/Image/iconLogout.png"));
         
+        
+        // Membuat atau mendeklarasikan untuk menubar
         MenuItem dashboard = new MenuItem(null, true, iconDashboard, "DASHBOARD", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                pn_utama.removeAll();
-                pn_utama.repaint();
-                pn_utama.revalidate();
-                pn_utama.add(new Dashboard2());
+                pn_utama.removeAll();            // membersihkan halaman yg sedang tampil agar tdk tumpang tindih
+                pn_utama.repaint();              //Menyuruh aplikasi untuk "menggambar ulang" layar agar perubahan terlihat bersih.   
+                pn_utama.revalidate(); 
+                pn_utama.add(new Dashboard2());  // Memasang halaman baru ke bagian tengah aplikasi.
             }
         });
         
@@ -122,21 +125,25 @@ public class DashboardFrame extends javax.swing.JFrame {
         MenuItem Logout = new MenuItem(iconLogout, false, null, "LOGOUT", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // menampilkan pesan 
                 if (JOptionPane.showConfirmDialog(null, "Yakin Logout?", "Logout", JOptionPane.YES_NO_OPTION)==0) {
-                    new LoginFrame().setVisible(true);
-                    dispose();
+                    new LoginFrame().setVisible(true); // jika ya maka akan menampilkan frame login
+                    dispose(); // menutup halaman dashboard
                 }
             }
         });
-             
+        
+        // mendeklarasikan submenu
         MenuItem menuHome          = new MenuItem(iconHome, false, null, "HOME", null, dashboard);
         MenuItem menuAkademik      = new MenuItem(iconAkademik, false, null, "AKADEMIK SANTRI", null, santri, kelas, kitab);
         MenuItem menuKepengurusan  = new MenuItem(iconKepengurusan, false, null, "KEPENGURUSAN", null, pengurus, pengajar);
         
+        // memasukkan semua daftar menu yang sudah dibuat tadi ke dalam panel menubar
         addMenu(menuHome, menuAkademik, menuKepengurusan, LogSantri, about, Logout);
     }
     
-    private  void  addMenu(MenuItem... menu) {
+    // Fungsi Penambah Menu Otomatis
+    private  void  addMenu(MenuItem... menu) { 
         for (int i = 0; i < menu.length; i++) {
             pn_menu.add(menu[i]);
             ArrayList<MenuItem> subMenu = menu[i].getSubMenu();
