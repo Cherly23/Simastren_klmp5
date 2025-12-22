@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatLightLaf;
+import jFrame.PengurusFrame;
 
 /**
  *
@@ -36,6 +37,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         ImageIcon iconPengajar      = new ImageIcon(getClass().getResource("/Image/iconPengajar.png"));
         ImageIcon iconAbout         = new ImageIcon(getClass().getResource("/Image/iconAbout.png"));
         ImageIcon iconLogout        = new ImageIcon(getClass().getResource("/Image/iconLogout.png"));
+        ImageIcon iconLogSantri     = new ImageIcon(getClass().getResource("/Image/iconLogout.png"));
         
         MenuItem dashboard = new MenuItem(null, true, iconDashboard, "DASHBOARD", new ActionListener() {
             @Override
@@ -83,7 +85,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 pn_utama.removeAll();
                 pn_utama.repaint();
                 pn_utama.revalidate();
-                pn_utama.add(new Dashboard2());
+                pn_utama.add(new PengurusFrame());
             }
         });
             
@@ -94,6 +96,16 @@ public class DashboardFrame extends javax.swing.JFrame {
                 pn_utama.repaint();
                 pn_utama.revalidate();
                 pn_utama.add(new PengajarFrame());
+            }
+        });
+        
+        MenuItem LogSantri = new MenuItem(iconLogout, false, null, "LOGSANTRI", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                 pn_utama.removeAll();
+                pn_utama.repaint();
+                pn_utama.revalidate();
+                pn_utama.add(new LogSantri());
             }
         });
         
@@ -121,7 +133,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         MenuItem menuAkademik      = new MenuItem(iconAkademik, false, null, "AKADEMIK SANTRI", null, santri, kelas, kitab);
         MenuItem menuKepengurusan  = new MenuItem(iconKepengurusan, false, null, "KEPENGURUSAN", null, pengurus, pengajar);
         
-        addMenu(menuHome, menuAkademik, menuKepengurusan, about, Logout);
+        addMenu(menuHome, menuAkademik, menuKepengurusan, LogSantri, about, Logout);
     }
     
     private  void  addMenu(MenuItem... menu) {

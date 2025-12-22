@@ -223,7 +223,7 @@ public class DataKitab_Frame extends javax.swing.JPanel {
         });
         add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 470, -1, 40));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel2.setText("DATA KITAB");
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 280, 50));
 

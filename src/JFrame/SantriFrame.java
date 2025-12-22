@@ -1,4 +1,4 @@
-/*
+  /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
@@ -329,7 +329,7 @@ public class SantriFrame extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblSantri);
 
-        DataSantri.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 1030, 310));
+        DataSantri.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 1000, 310));
 
         Baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Santri_Mentahan.png"))); // NOI18N
         DataSantri.add(Baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1064, 655));
@@ -389,13 +389,17 @@ public class SantriFrame extends javax.swing.JPanel {
         InputSantri.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 360, 120, 40));
 
         cbxStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mukim", "Tidak Mukim" }));
+        cbxStatus.setBorder(null);
+        cbxStatus.setOpaque(true);
         cbxStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxStatusActionPerformed(evt);
             }
         });
-        InputSantri.add(cbxStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 408, 350, -1));
+        InputSantri.add(cbxStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 408, 350, 20));
 
+        cbxKelas.setBorder(null);
+        cbxKelas.setOpaque(true);
         InputSantri.add(cbxKelas, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 488, 350, -1));
 
         btnSimpan.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
@@ -661,15 +665,23 @@ public class SantriFrame extends javax.swing.JPanel {
     }//GEN-LAST:event_btnTambahMouseClicked
 
     private void btnHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseClicked
-        // TODO add your handling code here:
-        DataSantri str = new DataSantri();
         int baris = tblSantri.getSelectedRow();
-        String idStr = tblSantri.getValueAt(baris, 0).toString();
-        int id = Integer.parseInt(idStr);
-        str.setId_santri(id);
-        str.HapusSantri();
-        load_table();
-        reset();
+        // TODO add your handling code here:
+        if (baris != -1) {
+        int jawab = JOptionPane.showConfirmDialog(this, "Hapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (jawab == JOptionPane.YES_OPTION) {
+            // Ambil ID dari kolom pertama (index 0)
+            int id = Integer.parseInt(tblSantri.getValueAt(baris, 0).toString());
+            
+            DataSantri ds = new DataSantri();
+            ds.setId_santri(id);
+            ds.HapusSantri(); // Menghapus di DB & Trigger log akan jalan otomatis
+            
+            load_table(); // Refresh tabel santri
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Pilih baris dulu!");
+    }
     }//GEN-LAST:event_btnHapusMouseClicked
 
     private void tblSantriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSantriMouseClicked

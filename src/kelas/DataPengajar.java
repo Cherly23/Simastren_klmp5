@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 /**
  *
- * @author cherly
+ * @author giantluigi
  */
 public class DataPengajar extends Koneksi{
     
@@ -191,7 +191,7 @@ public class DataPengajar extends Koneksi{
         }
         return rs;
     }
-    
+   
     public ResultSet konversi() {
         try {
             query = "SELECT id_ustadz FROM ustadz WHERE nama_ustadz = ?";

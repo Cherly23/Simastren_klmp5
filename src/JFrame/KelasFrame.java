@@ -167,7 +167,7 @@ public class KelasFrame extends javax.swing.JPanel {
         jLabel3.setText(" Wali Kelas");
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, -1, 30));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel4.setText("DATA KELAS");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 390, 90));
 

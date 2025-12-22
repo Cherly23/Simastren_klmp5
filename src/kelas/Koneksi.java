@@ -7,8 +7,12 @@ package kelas;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+/**
+ *
+ * @author giantluigi
+ */
 public class Koneksi {
+
     private Connection mysqlconfig;
     public Connection configDB() {
         try {
@@ -17,7 +21,6 @@ public class Koneksi {
             String pass = "";
             mysqlconfig = DriverManager.getConnection(url, user, pass);
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
         }
         return mysqlconfig;
     }
