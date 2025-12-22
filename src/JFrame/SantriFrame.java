@@ -219,6 +219,8 @@ public class SantriFrame extends javax.swing.JPanel {
 
         setLayout(new java.awt.CardLayout());
 
+        MainPanel.setLayout(new java.awt.CardLayout());
+
         DataSantri.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
@@ -308,6 +310,8 @@ public class SantriFrame extends javax.swing.JPanel {
 
         Baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Santri_Mentahan.png"))); // NOI18N
         DataSantri.add(Baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1064, 655));
+
+        MainPanel.add(DataSantri, "card2");
 
         InputSantri.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -463,26 +467,7 @@ public class SantriFrame extends javax.swing.JPanel {
         baground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Data_Input_Santri.png"))); // NOI18N
         InputSantri.add(baground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 710));
 
-        javax.swing.GroupLayout MainPanelLayout = new javax.swing.GroupLayout(MainPanel);
-        MainPanel.setLayout(MainPanelLayout);
-        MainPanelLayout.setHorizontalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DataSantri, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(MainPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(InputSantri, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        MainPanelLayout.setVerticalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DataSantri, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
-            .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(MainPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(InputSantri, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
+        MainPanel.add(InputSantri, "card3");
 
         add(MainPanel, "card2");
     }// </editor-fold>//GEN-END:initComponents
